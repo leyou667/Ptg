@@ -35,10 +35,10 @@ npm run dev                  # http://localhost:3000
 ## Structure
 
 - `content/fr.ts` : tous les textes (prêt pour l'ajout du néerlandais), formules, FAQ, pages légales.
-- `components/Intro.tsx` : intro vidéo pilotée par le scroll (GSAP ScrollTrigger, chargé à la demande).
+- `components/Intro.tsx` : intro pilotée par le scroll, séquence d'images dessinée sur un `<canvas>` (GSAP ScrollTrigger, chargé à la demande). Compatible iOS Safari, contrairement au pilotage de `<video>.currentTime`.
 - `components/QuoteFlow.tsx`, `components/Advisor.tsx` : parcours de devis et assistant IA.
 - `app/api/quote`, `app/api/advisor` : routes serveur (validation zod, honeypot, limitation par IP).
-- `public/videos/intro.{mp4,webm}` : vidéo ré-encodée en images clés partout (`ffmpeg -g 1`).
+- `public/frames/{desktop,mobile}/` : images WebP de l'intro (24 i/s ordinateur, 12 i/s mobile), générées par `scripts/make-frames.sh` depuis `assets/intro-source.mp4`.
 - `public/images/logo*.png` : logo à fond transparent (`scripts/make-logo.py` le régénère depuis la capture).
 
 ## Déploiement Vercel

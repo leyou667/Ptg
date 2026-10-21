@@ -16,7 +16,7 @@ export function SmoothScroll() {
     (async () => {
       const { default: Lenis } = await import("lenis");
       if (cancelled) return;
-      const lenis = new Lenis({ lerp: 0.1, anchors: true });
+      const lenis = new Lenis({ lerp: 0.1, anchors: true, syncTouch: false });
       window.__lenis = lenis;
       const loop = (t: number) => {
         lenis.raf(t);

@@ -32,6 +32,7 @@ html.lenis body {
 }
 
 body {
+  overflow-x: clip;
   background: var(--color-papier);
   color: var(--color-marine);
   font-family: var(--font-sans);
@@ -156,21 +157,21 @@ p, li { max-width: 66ch; }
 @media (prefers-reduced-motion: reduce) {
   .intro { height: auto; }
 }
-.intro.intro-static { height: auto; }
-.intro.intro-static .intro-stage { position: relative; min-height: 100svh; height: auto; }
-.intro.intro-static video { display: none; }
-.intro.intro-static .intro-stage { background: url("/images/intro-poster.jpg") center / cover; }
-.intro.intro-static .intro-copy { position: relative; padding-top: 6rem; min-height: 100svh; display: flex; align-items: flex-end; }
-.intro.intro-static .intro-copy ol { min-height: 0; display: grid; gap: 1.25rem; }
-.intro.intro-static .intro-line { position: static; opacity: 1 !important; transform: none !important; font-size: 1.9rem; }
-.intro.intro-static .intro-hint { display: none; }
+.intro.intro-static { height: auto !important; }
+.intro.intro-static .intro-stage { position: relative !important; min-height: 100svh !important; height: auto !important; }
+.intro .intro-stage { background: url("/images/intro-poster.jpg") center / cover; }
+.intro.intro-static canvas { display: none; }
+.intro.intro-static .intro-copy { position: relative !important; padding-top: 6rem !important; min-height: 100svh !important; display: flex !important; align-items: flex-end !important; }
+.intro.intro-static .intro-copy ol { min-height: 0 !important; display: grid !important; gap: 1.25rem !important; }
+.intro.intro-static .intro-line { position: static !important; opacity: 1 !important; transform: none !important; font-size: 1.9rem !important; }
+.intro.intro-static .intro-hint { display: none !important; }
 @media (prefers-reduced-motion: reduce) {
-  .intro video { display: none; }
-  .intro .intro-stage { position: relative; min-height: 100svh; height: auto; background: url("/images/intro-poster.jpg") center / cover; }
-  .intro .intro-copy { position: relative; padding-top: 6rem; min-height: 100svh; display: flex; align-items: flex-end; }
-  .intro .intro-copy ol { min-height: 0; display: grid; gap: 1.25rem; }
-  .intro .intro-line { position: static; opacity: 1 !important; transform: none !important; font-size: 1.9rem; }
-  .intro .intro-hint { display: none; }
+  .intro canvas { display: none; }
+  .intro .intro-stage { position: relative !important; min-height: 100svh !important; height: auto !important; }
+  .intro .intro-copy { position: relative !important; padding-top: 6rem !important; min-height: 100svh !important; display: flex !important; align-items: flex-end !important; }
+  .intro .intro-copy ol { min-height: 0 !important; display: grid !important; gap: 1.25rem !important; }
+  .intro .intro-line { position: static !important; opacity: 1 !important; transform: none !important; font-size: 1.9rem !important; }
+  .intro .intro-hint { display: none !important; }
 }
 
 }

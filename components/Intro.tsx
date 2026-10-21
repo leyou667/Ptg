@@ -6,36 +6,76 @@ import { intro } from "@/content/fr";
 import { Star } from "./Star";
 
 const DURATION = 10;
-const SEGMENT = DURATION / intro.lines.length; // 2 s par phrase
+const SEGMENT = DURATION / intro.lines.length; // 2 s de défilement par phrase
+
+// Séquences d'images extraites de la vidéo (scripts/make-frames.sh).
+const SETS = {
+  desktop: { dir: "/frames/desktop", count: 240 }, // 24 images/s
+  mobile: { dir: "/frames/mobile", count: 120 }, // 12 images/s
+};
+const frameUrl = (dir: string, i: number) => `${dir}/frame_${String(i + 1).padStart(3, "0")}.webp`;
 
 type Connection = { saveData?: boolean; effectiveType?: string };
 
 export function Intro() {
   const wrap = useRef<HTMLElement>(null);
-  const video = useRef<HTMLVideoElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
+  const canvas = useRef<HTMLCanvasElement>(null);
   const lines = useRef<(HTMLLIElement | null)[]>([]);
   const starEl = useRef<HTMLDivElement>(null);
   const hint = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const root = wrap.current;
-    const vid = video.current;
-    if (!root || !vid) return;
+    const stageEl = stage.current;
+    const cv = canvas.current;
+    if (!root || !stageEl || !cv) return;
+
+    const goStatic = () => root.classList.add("intro-static");
 
     const conn = (navigator as Navigator & { connection?: Connection }).connection;
     const slow = conn?.saveData || conn?.effectiveType === "2g" || conn?.effectiveType === "slow-2g" || conn?.effectiveType === "3g";
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || slow) {
-      root.classList.add("intro-static");
-      return;
-    }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || slow) return goStatic();
+
+    const ctx = cv.getContext("2d", { alpha: false });
+    if (!ctx) return goStatic();
+    ctx.imageSmoothingQuality = "high";
+
+    const set = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches ? SETS.mobile : SETS.desktop;
+    const images: (HTMLImageElement | undefined)[] = new Array(set.count);
 
     let target = 0;
     let current = 0;
     let raf = 0;
+    let lastDrawn = -1;
     let killed = false;
+    let refresh = () => {};
     let cleanup = () => {};
 
-    const draw = (p: number) => {
+    /* ---- Dessin : toujours dans requestAnimationFrame, jamais dans l'événement scroll ---- */
+    const nearest = (i: number) => {
+      for (let d = 0; d < set.count; d++) {
+        if (images[i - d]) return i - d;
+        if (images[i + d]) return i + d;
+      }
+      return -1;
+    };
+
+    const drawFrame = (index: number) => {
+      const k = nearest(index);
+      const img = k >= 0 ? images[k] : undefined;
+      if (!img) return false;
+      const cw = cv.width;
+      const ch = cv.height;
+      // object-fit: cover simulé
+      const s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+      const w = img.naturalWidth * s;
+      const h = img.naturalHeight * s;
+      ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+      return true;
+    };
+
+    const drawText = (p: number) => {
       const t = p * DURATION;
       lines.current.forEach((el, i) => {
         if (!el) return;
@@ -63,38 +103,125 @@ export function Intro() {
       if (hint.current) hint.current.style.opacity = String(Math.max(0, 1 - p * 14));
     };
 
-    const loop = () => {
-      raf = requestAnimationFrame(loop);
-      current += (target - current) * 0.14;
-      if (Math.abs(target - current) < 0.0004) current = target;
-      draw(current);
-      const time = current * DURATION;
-      if (vid.readyState >= 2 && Math.abs(vid.currentTime - time) > 1 / 60 && !vid.seeking) {
-        vid.currentTime = Math.min(DURATION - 0.01, Math.max(0, time));
+    const tick = () => {
+      raf = 0;
+      current += (target - current) * 0.2;
+      if (Math.abs(target - current) < 0.0003) current = target;
+      drawText(current);
+      const idx = Math.round(current * (set.count - 1));
+      if (idx !== lastDrawn && drawFrame(idx)) lastDrawn = idx;
+      if (current !== target) request();
+    };
+    const request = () => {
+      if (!raf && !killed) raf = requestAnimationFrame(tick);
+    };
+
+    /* ---- Taille du canvas (devicePixelRatio plafonné à 2 pour ménager la mémoire) ---- */
+    const resize = () => {
+      const r = stageEl.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = Math.max(1, Math.round(r.width * dpr));
+      const h = Math.max(1, Math.round(r.height * dpr));
+      if (cv.width !== w || cv.height !== h) {
+        cv.width = w;
+        cv.height = h;
+        ctx.imageSmoothingQuality = "high";
+        lastDrawn = -1;
       }
+      request();
+    };
+    const ro = new ResizeObserver(resize);
+    ro.observe(stageEl);
+    resize();
+
+    /* ---- Chargement progressif : 1re image, puis paquets (grosses mailles d'abord) ---- */
+    const load = (i: number) =>
+      new Promise<boolean>((resolve) => {
+        const im = new Image();
+        im.decoding = "async";
+        im.onload = () => {
+          const done = () => {
+            images[i] = im;
+            resolve(true);
+          };
+          // Décode avant de dessiner pour éviter un à-coup au premier affichage.
+          (im.decode ? im.decode() : Promise.resolve()).then(done, done);
+        };
+        im.onerror = () => resolve(false);
+        im.src = frameUrl(set.dir, i);
+      });
+
+    const loadBatch = async (indices: number[]) => {
+      const CONCURRENCY = 6;
+      let cursor = 0;
+      const worker = async () => {
+        while (cursor < indices.length && !killed) await load(indices[cursor++]);
+      };
+      await Promise.all(Array.from({ length: Math.min(CONCURRENCY, indices.length) }, worker));
+    };
+
+    const loadRest = async () => {
+      for (const stride of [24, 8, 4, 2, 1]) {
+        if (killed) return;
+        const todo: number[] = [];
+        for (let i = 0; i < set.count; i += stride) if (!images[i]) todo.push(i);
+        if (todo.length) {
+          await loadBatch(todo);
+          lastDrawn = -1; // une image plus proche est peut-être disponible
+          request();
+        }
+      }
+      refresh();
     };
 
     (async () => {
+      // 1. Seulement la première image : le reste ne bloque ni l'affichage ni le défilement.
+      if (!(await load(0)) || killed) {
+        if (!killed) goStatic();
+        return;
+      }
+      lastDrawn = -1;
+      request();
+
+      // 2. Défilement : GSAP ScrollTrigger (chargé à la demande).
       const [{ gsap }, { ScrollTrigger }] = await Promise.all([import("gsap"), import("gsap/ScrollTrigger")]);
       if (killed) return;
       gsap.registerPlugin(ScrollTrigger);
+      // iOS Safari : la barre d'adresse qui se replie ne doit pas déclencher de recalcul.
+      ScrollTrigger.config({ ignoreMobileResize: true });
       const st = ScrollTrigger.create({
         trigger: root,
         start: "top top",
         end: "bottom bottom",
         onUpdate: (self) => {
           target = self.progress;
+          request();
         },
       });
-      vid.pause();
-      draw(0);
-      raf = requestAnimationFrame(loop);
+      refresh = () => ScrollTrigger.refresh();
       cleanup = () => st.kill();
+      drawText(0);
+
+      // 3. Le reste des images, après le chargement de la page.
+      const start = () => {
+        if (!killed) void loadRest();
+      };
+      if (document.readyState === "complete") start();
+      else {
+        window.addEventListener("load", start, { once: true });
+        const prev = cleanup;
+        cleanup = () => {
+          prev();
+          window.removeEventListener("load", start);
+        };
+      }
+      refresh();
     })();
 
     return () => {
       killed = true;
       cancelAnimationFrame(raf);
+      ro.disconnect();
       cleanup();
     };
   }, []);
@@ -108,25 +235,14 @@ export function Intro() {
 
   return (
     <section ref={wrap} aria-label="Introduction" className="intro relative -mt-16">
-      <div className="intro-stage sticky top-0 h-svh w-full overflow-hidden bg-marine">
-        <video
-          ref={video}
-          className="absolute inset-0 h-full w-full object-cover"
-          poster="/images/intro-poster.jpg"
-          muted
-          playsInline
-          preload="auto"
-          aria-label={intro.posterAlt}
-        >
-          <source src="/videos/intro.mp4" type="video/mp4" />
-          <source src="/videos/intro.webm" type="video/webm" />
-        </video>
+      <div ref={stage} className="intro-stage sticky top-0 h-svh w-full overflow-hidden bg-marine">
+        <canvas ref={canvas} className="absolute inset-0 h-full w-full" role="img" aria-label={intro.posterAlt} />
         {/* Voile sable puis marine : lisibilité du texte en bas à gauche */}
         <div aria-hidden className="absolute inset-0 bg-sable/25 mix-blend-multiply" />
         <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-marine/85 via-marine/35 to-transparent" />
 
         <div ref={starEl} aria-hidden className="absolute left-[48%] top-[60%] h-16 w-16 opacity-0 md:left-[56%] md:top-[64%] md:h-24 md:w-24">
-          <Star className="scintille h-full w-full text-cyan drop-shadow-[0_0_0_rgba(0,0,0,0)]" />
+          <Star className="scintille h-full w-full text-cyan" />
         </div>
 
         <div className="container-x intro-copy absolute inset-x-0 bottom-0 pb-24 md:pb-20">

@@ -9,7 +9,6 @@ const csp = [
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
-  "media-src 'self' blob:",
   "font-src 'self' data:",
   "connect-src 'self' https://vitals.vercel-insights.com",
   "frame-ancestors 'none'",
@@ -37,7 +36,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/videos/(.*)",
+        source: "/frames/(.*)",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
     ];

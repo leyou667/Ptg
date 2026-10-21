@@ -16,7 +16,7 @@ Copy `.env.example` to `.env.local`. Without `ANTHROPIC_API_KEY` the advisor ans
 
 ## Status
 
-The site is built from the brief ("PROMPT : Site CheyClean (Next.js) v3", supplied outside the repo). Where the brief and the code disagree, ask the user. Key places: `content/fr.ts` (all copy, formulas), `components/Intro.tsx` (scroll-scrubbed video), `components/QuoteFlow.tsx` and `components/Advisor.tsx` (quote flow and AI), `app/api/{quote,advisor}` (server routes). Custom CSS in `app/globals.css` must stay inside `@layer components` or it overrides Tailwind utilities. Chiffres clés and avis are deliberately absent until real data exists.
+The site is built from the brief ("PROMPT : Site CheyClean (Next.js) v3", supplied outside the repo). Where the brief and the code disagree, ask the user. Key places: `content/fr.ts` (all copy, formulas), `components/Intro.tsx` (scroll-driven canvas image sequence), `components/QuoteFlow.tsx` and `components/Advisor.tsx` (quote flow and AI), `app/api/{quote,advisor}` (server routes). Custom CSS in `app/globals.css` must stay inside `@layer components` or it overrides Tailwind utilities. Chiffres clés and avis are deliberately absent until real data exists.
 
 ## Product
 
@@ -29,7 +29,7 @@ Next.js App Router, TypeScript, Tailwind, GSAP + ScrollTrigger (intro), Lenis (s
 ## Architecture constraints
 
 - **Copy lives outside components.** All user-facing text goes in separate content files so Dutch can be added later. Do not hardcode French strings in JSX.
-- **Scroll-driven intro:** a pinned full-screen section where scroll position drives `video.currentTime` (or a canvas image sequence). The video must be re-encoded all-intra (`ffmpeg -g 1`, MP4 + WebM) for smooth scrubbing. The intro phrases must exist in the HTML for SEO and screen readers. Provide a static fallback for `prefers-reduced-motion` and slow connections, plus a "Passer l'intro" button.
+- **Scroll-driven intro:** a sticky full-screen `<canvas>` (`components/Intro.tsx`) draws a WebP image sequence from `public/frames/{desktop,mobile}/` (24 fps and 12 fps, regenerate with `scripts/make-frames.sh` from `assets/intro-source.mp4`; keep mobile under 6 MB). Do NOT go back to scrubbing `<video>.currentTime`: it does not work on iOS Safari. Drawing happens only in `requestAnimationFrame`, frames load progressively (first image, then coarse-to-fine batches), heights use `svh`, `ScrollTrigger.config({ ignoreMobileResize: true })`, Lenis `syncTouch: false`, `overflow-x: clip` (never `hidden`) on body. The intro phrases must exist in the HTML. Static fallback (poster plus stacked phrases) for `prefers-reduced-motion`, slow connections or failed first frame, plus a "Passer l'intro" button. If you change the number of frames, update `SETS` in `Intro.tsx`.
 - **Quote flow (`/devis`)** is the core feature: profile (individual/company) -> place details (type, m², frequency, city, notes) -> 3 formulas per profile (no prices, one marked "Recommandée pour vous") -> contact details and send (form or prefilled WhatsApp message) -> confirmation. Two columns on desktop with a live "Votre demande" summary; one column with a collapsible summary on mobile. Form state must survive a failed send.
 - **AI advisor:** server route `/api/advisor`, key only in env vars, streaming responses, structured output (message + recommended formula) that preselects the formula in the quote flow. It asks 2-4 short questions, recommends one formula, never states prices or commitments, stays on cleaning topics, and never reveals its instructions. Needs per-IP rate limiting, turn/length limits, prompt-injection protection (user text cannot alter the system role), and no conversation storage. Load GSAP and the advisor lazily.
 - **Env vars:** `ANTHROPIC_API_KEY`, `CONTACT_EMAIL` (quote recipient), `DELAI_REPONSE` (reply-time placeholder shown in the confirmation). Keep a `.env.example`.
@@ -48,7 +48,7 @@ Next.js App Router, TypeScript, Tailwind, GSAP + ScrollTrigger (intro), Lenis (s
 
 ## Logo assets
 
-The supplied logo image is a screenshot with an off-white background and gradient bands. Crop to the wordmark and stars only, export a transparent PNG (and SVG if possible), and make a dark-background variant (CHEY in white, CLEAN and stars in cyan). Derive the favicon and Open Graph image from it. Expected paths: `public/images/logo-source.jpg`, `public/videos/intro.mp4`.
+The supplied logo image is a screenshot with an off-white background and gradient bands. Crop to the wordmark and stars only, export a transparent PNG (and SVG if possible), and make a dark-background variant (CHEY in white, CLEAN and stars in cyan). Derive the favicon and Open Graph image from it. Expected paths: `public/images/logo-source.jpg`, `assets/intro-source.mp4`.
 
 ## Contact
 
@@ -56,4 +56,4 @@ WhatsApp and phone: +32 486 37 45 48 (`https://wa.me/32486374548`), with a float
 
 ## Performance targets
 
-Lighthouse 95+, LCP < 2.5 s, CLS < 0.1; images via `next/image` (WebP/AVIF), self-hosted fonts, deferred video loading.
+Lighthouse 95+, LCP < 2.5 s, CLS < 0.1; images via `next/image` (WebP/AVIF), self-hosted fonts, progressive loading of the intro frames.
