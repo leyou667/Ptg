@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+@theme {
+  --color-marine: #0b1f3f;
+  --color-marine-soft: #3d4f6b;
+  --color-cyan: #12c4dc;
+  --color-papier: #f8f5f0;
+  --color-brume: #e4eef0;
+  --color-sable: #d9c3a0;
+  --color-ligne: #c9dade;
+  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --radius-panel: 20px;
+  --radius-champ: 12px;
+  --shadow-marine: 0 1px 2px rgb(11 31 63 / 0.06), 0 12px 32px -16px rgb(11 31 63 / 0.28);
+}
+
+@layer components {
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: auto;
+}
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  background: var(--color-papier);
+  color: var(--color-marine);
+  font-family: var(--font-sans);
+  font-optical-sizing: auto;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Échelle typographique, ratio 1,25 */
+h1, h2, h3 {
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(2.44rem, 1.6rem + 4vw, 4.77rem); font-stretch: 105%; }
+h2 { font-size: clamp(1.95rem, 1.4rem + 2.4vw, 3.05rem); }
+h3 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.015em; line-height: 1.25; }
+p, li { max-width: 66ch; }
+
+:focus-visible {
+  outline: 3px solid var(--color-marine);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.on-dark :focus-visible { outline-color: var(--color-cyan); }
+
+::selection { background: var(--color-cyan); color: var(--color-marine); }
+
+.container-x {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 768px) { .container-x { padding-inline: 2.5rem; } }
+
+.section { padding-block: clamp(4rem, 8vw, 8rem); }
+.section-alt { background: var(--color-brume); }
+
+/* Boutons : pilule, cible tactile d'au moins 44 px */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.7rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 650;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--color-marine); color: #fff; }
+.btn-primary:hover { background: #17325f; }
+.btn-cyan { background: var(--color-cyan); color: var(--color-marine); }
+.btn-cyan:hover { background: #3fd3e6; }
+.btn-ghost { border-color: var(--color-marine); color: var(--color-marine); background: transparent; }
+.btn-ghost:hover { background: var(--color-marine); color: #fff; }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.panel {
+  background: #fff;
+  border: 1px solid var(--color-ligne);
+  border-radius: var(--radius-panel);
+}
+
+.champ {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.7rem 1rem;
+  background: var(--color-brume);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-champ);
+  color: var(--color-marine);
+  font: inherit;
+}
+.champ:focus-visible { outline: none; border-color: var(--color-marine); background: #fff; }
+.champ[aria-invalid="true"] { border-color: #b3261e; background: #fff; }
+.champ::placeholder { color: #5b6b82; }
+
+.erreur { color: #9c1c14; font-size: 0.9375rem; margin-top: 0.4rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Étoile qui scintille sur le marbre pendant l'intro */
+@keyframes scintille {
+  0%, 100% { transform: scale(0.6) rotate(0deg); opacity: 0.5; }
+  50% { transform: scale(1.15) rotate(12deg); opacity: 1; }
+}
+.scintille { animation: scintille 1.6s ease-in-out infinite; transform-origin: center; }
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  background: var(--color-marine);
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+}
+.skip-link:focus { top: 1rem; }
+
+/* Intro : hauteur de défilement qui pilote la vidéo (≈ 1 écran par phrase) */
+.intro { height: 520svh; }
+@media (min-width: 768px) { .intro { height: 600svh; } }
+
+/* Version de secours : reduced-motion (CSS) ou connexion lente (classe posée par le script) */
+@media (prefers-reduced-motion: reduce) {
+  .intro { height: auto; }
+}
+.intro.intro-static { height: auto; }
+.intro.intro-static .intro-stage { position: relative; min-height: 100svh; height: auto; }
+.intro.intro-static video { display: none; }
+.intro.intro-static .intro-stage { background: url("/images/intro-poster.jpg") center / cover; }
+.intro.intro-static .intro-copy { position: relative; padding-top: 6rem; min-height: 100svh; display: flex; align-items: flex-end; }
+.intro.intro-static .intro-copy ol { min-height: 0; display: grid; gap: 1.25rem; }
+.intro.intro-static .intro-line { position: static; opacity: 1 !important; transform: none !important; font-size: 1.9rem; }
+.intro.intro-static .intro-hint { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .intro video { display: none; }
+  .intro .intro-stage { position: relative; min-height: 100svh; height: auto; background: url("/images/intro-poster.jpg") center / cover; }
+  .intro .intro-copy { position: relative; padding-top: 6rem; min-height: 100svh; display: flex; align-items: flex-end; }
+  .intro .intro-copy ol { min-height: 0; display: grid; gap: 1.25rem; }
+  .intro .intro-line { position: static; opacity: 1 !important; transform: none !important; font-size: 1.9rem; }
+  .intro .intro-hint { display: none; }
+}
+
+}

@@ -1,0 +1,56 @@
+import type { Metadata, Viewport } from "next";
+import { Bricolage_Grotesque } from "next/font/google";
+import "./globals.css";
+import { site } from "@/content/fr";
+import { siteUrl } from "@/lib/config";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { WhatsAppFab } from "@/components/WhatsAppFab";
+import { CookieBanner } from "@/components/CookieBanner";
+import { ScrollProgress } from "@/components/ScrollProgress";
+import { SmoothScroll } from "@/components/SmoothScroll";
+
+const bricolage = Bricolage_Grotesque({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-bricolage",
+  display: "swap",
+  axes: ["opsz", "wdth"],
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  title: { default: `${site.name}, société de nettoyage en Belgique`, template: `%s | ${site.name}` },
+  description: site.description,
+  applicationName: site.name,
+  openGraph: {
+    type: "website",
+    locale: "fr_BE",
+    siteName: site.name,
+    title: `${site.name}, société de nettoyage en Belgique`,
+    description: site.description,
+    images: [{ url: "/images/og.png", width: 1200, height: 630, alt: "CheyClean" }],
+  },
+  twitter: { card: "summary_large_image", images: ["/images/og.png"] },
+  alternates: { canonical: "./" },
+};
+
+export const viewport: Viewport = { themeColor: "#f8f5f0", width: "device-width", initialScale: 1 };
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="fr-BE" className={bricolage.variable}>
+      <body>
+        <a href="#contenu" className="skip-link">
+          Aller au contenu
+        </a>
+        <Header />
+        <ScrollProgress />
+        <SmoothScroll />
+        <main>{children}</main>
+        <Footer />
+        <WhatsAppFab />
+        <CookieBanner />
+      </body>
+    </html>
+  );
+}

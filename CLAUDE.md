@@ -2,11 +2,21 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Commands
+
+```bash
+npm run dev        # http://localhost:3000
+npm run build && npm start
+npm run lint
+npm run typecheck
+npm test           # Vitest; single file: npx vitest run tests/lib.test.ts
+```
+
+Copy `.env.example` to `.env.local`. Without `ANTHROPIC_API_KEY` the advisor answers "indisponible"; without `RESEND_API_KEY` quote delivery fails in production (logged and accepted in dev).
+
 ## Status
 
-The repository currently contains only `README.md` ("Ptg"). No code, `package.json`, or tooling exists yet, so there are no build/lint/test commands to document. Update this file once the project is scaffolded.
-
-The intended project is the **CheyClean** website, specified in a brief ("PROMPT : Site CheyClean (Next.js) v3") that was supplied outside the repo along with a logo image and a 10 s vertical intro video (`intro.mp4`, 720x1280). The points below are the parts of that brief that need cross-file context. Where the brief and the code disagree, ask the user.
+The site is built from the brief ("PROMPT : Site CheyClean (Next.js) v3", supplied outside the repo). Where the brief and the code disagree, ask the user. Key places: `content/fr.ts` (all copy, formulas), `components/Intro.tsx` (scroll-scrubbed video), `components/QuoteFlow.tsx` and `components/Advisor.tsx` (quote flow and AI), `app/api/{quote,advisor}` (server routes). Custom CSS in `app/globals.css` must stay inside `@layer components` or it overrides Tailwind utilities. Chiffres clés and avis are deliberately absent until real data exists.
 
 ## Product
 
