@@ -261,10 +261,10 @@ export const faq = [
 export const audiencePages = {
   particulier: {
     path: "/particuliers",
-    h1: "Le nettoyage de votre maison, en abonnement",
+    h1: "Le nettoyage de votre maison",
     meta: "Nettoyage à domicile en Belgique : appartement, maison, villa, après travaux. Formules en abonnement, devis sur mesure.",
     intro:
-      "Un intérieur net sans y penser. Une équipe régulière, des gestes précis et le respect de chaque matière.",
+      "Un intérieur net sans y penser, en abonnement. Une équipe régulière, des gestes précis et le respect de chaque matière.",
     servicesTitle: "Ce que nous entretenons",
     services: [
       { t: "Appartements et maisons", d: "Sols, cuisine, sanitaires, poussières et surfaces, à votre rythme." },
@@ -288,10 +288,10 @@ export const audiencePages = {
   },
   societe: {
     path: "/societes",
-    h1: "Le nettoyage de vos locaux professionnels",
+    h1: "Le nettoyage de vos locaux",
     meta: "Nettoyage de bureaux, salles de sport, écoles, bibliothèques et commerces en Belgique. Abonnement et devis sur mesure.",
     intro:
-      "Des locaux impeccables, sans perturber votre activité. Interventions discrètes, ponctuelles et suivies.",
+      "Des locaux professionnels impeccables, en abonnement, sans perturber votre activité. Interventions discrètes, ponctuelles et suivies.",
     servicesTitle: "Les lieux que nous entretenons",
     services: [
       { t: "Bureaux", d: "Postes de travail, salles de réunion, cuisines et sanitaires." },
@@ -356,7 +356,7 @@ export const cities = [
 ];
 
 export const cityPage = {
-  h1: (city: string) => `Société de nettoyage à ${city}`,
+  h1: (city: string) => `Nettoyage à ${city}`,
   meta: (city: string) =>
     `Nettoyage de bureaux, commerces et domiciles à ${city}. Abonnement et devis sur mesure avec CheyClean.`,
   intro: (city: string) =>

@@ -18,7 +18,7 @@ export function Footer() {
         <FooterList title="Informations" items={footer.legal} />
       </div>
       <div className="border-t border-white/15">
-        <p className="container-x py-5 text-sm text-white/70">© {new Date().getFullYear()} {footer.rights}</p>
+        <p className="container-x py-5 pb-24 text-sm text-white/70 md:pb-5">© {new Date().getFullYear()} {footer.rights}</p>
       </div>
     </footer>
   );
