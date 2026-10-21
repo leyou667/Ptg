@@ -5,5 +5,5 @@ import { legal } from "@/content/fr";
 export const metadata: Metadata = { title: legal.cookies.h1, description: legal.cookies.meta, alternates: { canonical: "/cookies" } };
 
 export default function Page() {
-  return <LegalPage h1={legal.cookies.h1} sections={legal.cookies.sections} />;
+  return <LegalPage h1={legal.cookies.h1} intro="Ce que ce site enregistre, et ce que vous décidez." sections={legal.cookies.sections} />;
 }

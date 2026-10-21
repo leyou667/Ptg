@@ -43,24 +43,27 @@ export function CookieBanner() {
     } catch {}
   };
 
+  const show = choice === "none" || choice === "unknown";
   return (
     <>
       {Analytics && <Analytics />}
-      {choice === "none" && (
-        <div role="region" aria-label="Cookies" className="fixed inset-x-3 bottom-20 z-50 mx-auto max-w-xl rounded-[20px] border border-ligne bg-white p-5 shadow-marine md:bottom-6 md:left-auto md:right-6 md:mx-0">
-          <p className="font-medium">
-            {cookies.text}{" "}
-            <Link href="/cookies" className="underline underline-offset-4">
-              En savoir plus
-            </Link>
-          </p>
-          <div className="mt-4 flex gap-3">
-            <button type="button" className="btn btn-primary flex-1" onClick={() => decide("accepted")}>
-              {cookies.accept}
-            </button>
-            <button type="button" className="btn btn-primary flex-1" onClick={() => decide("refused")}>
-              {cookies.refuse}
-            </button>
+      {show && (
+        <div role="region" aria-label="Cookies" className="cookie-bar field-marine on-dark">
+          <div className="container-x flex flex-col gap-3 py-3 md:flex-row md:items-center md:justify-between">
+            <p className="small font-medium">
+              {cookies.text}{" "}
+              <Link href="/cookies" className="underline underline-offset-4">
+                En savoir plus
+              </Link>
+            </p>
+            <div className="flex gap-3">
+              <button type="button" className="btn btn-cyan min-h-11 flex-1 py-2 md:flex-none" onClick={() => decide("accepted")}>
+                {cookies.accept}
+              </button>
+              <button type="button" className="btn btn-cyan min-h-11 flex-1 py-2 md:flex-none" onClick={() => decide("refused")}>
+                {cookies.refuse}
+              </button>
+            </div>
           </div>
         </div>
       )}

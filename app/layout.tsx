@@ -38,8 +38,12 @@ export const viewport: Viewport = { themeColor: "#f8f5f0", width: "device-width"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr-BE" className={bricolage.variable}>
+    <html lang="fr-BE" className={bricolage.variable} suppressHydrationWarning>
       <body>
+        {/* Avant le premier affichage : un visiteur qui a déjà choisi ne voit jamais la barre (pas de décalage de page). */}
+        <script dangerouslySetInnerHTML={{ __html: 'try{if(localStorage.getItem("cheyclean-cookies"))document.documentElement.setAttribute("data-cookies","set")}catch(e){}' }} />
+        <CookieBanner />
+        <div id="top" />
         <a href="#contenu" className="skip-link">
           Aller au contenu
         </a>
@@ -49,7 +53,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main>{children}</main>
         <Footer />
         <WhatsAppFab />
-        <CookieBanner />
       </body>
     </html>
   );

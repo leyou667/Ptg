@@ -28,10 +28,10 @@ export function ScrollProgress() {
   }, []);
 
   return (
-    <div aria-hidden className="pointer-events-none fixed right-3 top-16 bottom-24 z-30 w-5 md:right-6 md:w-6">
-      <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-marine/20 mix-blend-difference" />
-      <div ref={star} className="absolute left-0 top-0 w-6 will-change-transform">
-        <Star className="h-6 w-6 text-cyan" />
+    <div aria-hidden className="pointer-events-none fixed right-0.5 top-16 bottom-24 z-30 w-4 md:w-5">
+      <div className="absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 rounded-full bg-cyan/30" />
+      <div ref={star} className="absolute left-0 top-0 w-4 will-change-transform md:w-5">
+        <Star className="h-4 w-4 text-cyan md:h-5 md:w-5" />
       </div>
     </div>
   );

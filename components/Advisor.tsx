@@ -110,9 +110,9 @@ export function Advisor({ profile, onClose, onChoose }: { profile: Profile; onCl
         aria-modal="true"
         aria-labelledby="advisor-title"
         onKeyDown={onKeyDown}
-        className="flex max-h-[92svh] w-full flex-col rounded-t-[20px] bg-papier shadow-marine md:h-[40rem] md:max-w-md md:rounded-[20px]"
+        className="flex max-h-[92svh] w-full flex-col bg-papier shadow-flotte md:h-[40rem] md:max-w-md"
       >
-        <div className="flex items-center justify-between gap-3 border-b border-ligne px-5 py-4">
+        <div className="flex items-center justify-between gap-3 bg-brume px-5 py-4">
           <h2 id="advisor-title" className="flex items-center gap-2 text-lg tracking-normal">
             <Star className="h-5 w-5 text-cyan" />
             {advisor.name}
@@ -127,7 +127,7 @@ export function Advisor({ profile, onClose, onChoose }: { profile: Profile; onCl
           {messages.map((m, i) =>
             m.role === "assistant" && !m.content ? (
               <Bubble key={i} role="assistant">
-                <span className="text-marine-soft">{advisor.thinking}</span>
+                <span className="soft">{advisor.thinking}</span>
               </Bubble>
             ) : (
               <Bubble key={i} role={m.role}>
@@ -157,7 +157,7 @@ export function Advisor({ profile, onClose, onChoose }: { profile: Profile; onCl
         </div>
 
         <form
-          className="border-t border-ligne px-5 py-4"
+          className="bg-brume px-5 py-4"
           onSubmit={(e) => {
             e.preventDefault();
             send();
@@ -187,7 +187,7 @@ export function Advisor({ profile, onClose, onChoose }: { profile: Profile; onCl
               {advisor.send}
             </button>
           </div>
-          <p className="mt-3 text-[0.8125rem] text-marine-soft">{advisor.gdpr}</p>
+          <p className="mt-3 text-[0.8125rem] soft">{advisor.gdpr}</p>
         </form>
       </div>
     </div>
@@ -197,7 +197,7 @@ export function Advisor({ profile, onClose, onChoose }: { profile: Profile; onCl
 function Bubble({ role, children }: { role: "user" | "assistant"; children: React.ReactNode }) {
   return (
     <div className={`flex ${role === "user" ? "justify-end" : ""}`}>
-      <p className={`max-w-[88%] rounded-[16px] px-4 py-3 text-[0.9875rem] leading-snug ${role === "user" ? "bg-marine text-white" : "bg-white border border-ligne"}`}>{children}</p>
+      <p className={`max-w-[88%] rounded-[16px] px-4 py-3 text-[0.9875rem] leading-snug ${role === "user" ? "bg-marine text-white" : "bg-white"}`}>{children}</p>
     </div>
   );
 }

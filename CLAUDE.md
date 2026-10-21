@@ -38,12 +38,23 @@ Next.js App Router, TypeScript, Tailwind, GSAP + ScrollTrigger (intro), Lenis (s
 
 ## Design rules (easy to violate)
 
-- Palette: marine `#0B1F3F`, cyan `#12C4DC`, paper `#F8F5F0`, mist `#E4EEF0`, sand `#D9C3A0` (intro video overlay only). Sample exact values from the logo. Cyan is never used for body text on light backgrounds. WCAG AA minimum.
-- Single font family: Bricolage Grotesque (self-hosted variable font). Type scale ratio 1.25, lines under 70 characters.
-- Banned: a single coloured/italic word inside a heading, uppercase eyebrow labels above headings, "->" arrows glued to buttons, "·" separators in text, decorative monospace, decorative gradients or glow, generic grey shadows.
-- The only decorative motif is the logo's four-pointed star: it sparkles in the intro, then acts as the scroll-progress indicator along a thin vertical line. Other motion only responds to user actions; no blanket fade-in on every section. Numbering is allowed only for quote-flow steps.
-- Left-aligned layouts. The 3 formulas are not identical cards: the recommended one is larger, with comparable rows aligned across all three.
-- Interactive targets at least 44 px, visible keyboard focus, `prefers-reduced-motion` respected everywhere.
+The site follows the installed `design-taste-frontend` skill (`.agents/skills/`, symlinked in `.claude/skills/`). The user chose that skill over the earlier brief wherever they conflict. The dealt direction is "Type and nothing else" (`docs/direction-sheet.md`, seed 1899147688), kept with the brand palette and type. Check changes with the skill's gate (needs a Chromium; as root use a wrapper that adds `--no-sandbox` and set `CHROME_PATH`):
+
+```bash
+node .agents/skills/design-taste-frontend/scripts/lint.mjs app components content
+node .agents/skills/design-taste-frontend/scripts/inspect.mjs http://localhost:3000/<page> --allow gradient
+```
+
+`--allow gradient` is only for the marine scrim under the intro text. Pages that are tools or legal text also need `--allow few-pictures`.
+
+- Palette: marine `#0B1F3F` (ink and dark fields), cyan `#12C4DC` (action and the star only), ground `#F3F6F7`, mist `#E1EBEE` (one tone step for surfaces and alternate fields). No yellow-cream ground, no violet. Cyan is never body text on a light ground.
+- One family: Bricolage Grotesque. Five type sizes: 15, 18, 24, titles, display. Headlines at most two lines at every width, statements at most 4 lines on a phone.
+- No eyebrows or pill badges above headings, no thin rules or outlined boxes (separate with space or a tone step), no gradients except the intro scrim, no shadows at rest (only on what floats: the advisor dialog, the cookie bar is in flow), no glass or blur, no index numbering ("Étape 2"), no icon cards, no styled accent word in a headline.
+- Colour by chapter: sections are full-width fields (`data-chapter="light|dark"`); the header takes the ink of the chapter under it. Every page keeps the same pair of outer margins.
+- Motion: the intro, `Reveal` entrances (heading, then text, then picture, staggered 60-90 ms, content visible if script fails), feedback on every control, `prefers-reduced-motion` respected. Transform and opacity only.
+- Pictures come from the client's own intro video (`public/images/lieux/*.webp`, stills of `assets/intro-source.mp4`). The open picture collections could not be reached from the build environment; add credited pictures if they become reachable. Never present a picture as something it is not.
+- Left-aligned layouts on a 12-column grid. The 3 formulas are not identical cards: the recommended one is larger and dark, rows are aligned across all three.
+- Interactive targets at least 44 px, visible keyboard focus.
 - Vocabulary is constant: "devis" is the request, "formule" is the subscription.
 
 ## Logo assets

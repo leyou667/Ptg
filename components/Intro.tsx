@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { intro } from "@/content/fr";
+import { home, intro } from "@/content/fr";
 import { Star } from "./Star";
 
 const DURATION = 10;
@@ -24,6 +24,7 @@ export function Intro() {
   const lines = useRef<(HTMLLIElement | null)[]>([]);
   const starEl = useRef<HTMLDivElement>(null);
   const hint = useRef<HTMLDivElement>(null);
+  const subs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const root = wrap.current;
@@ -92,8 +93,22 @@ export function Intro() {
           o = 1;
           y = 0;
         }
+        // La première phrase est le <h1> : l'opacité va sur le titre lui-même, pas sur son <li>.
+        const node = (i === 0 ? el.firstElementChild : el) as HTMLElement;
+        node.style.opacity = String(o);
+        node.style.transform = `translate3d(0, ${y}px, 0)`;
+        el.style.pointerEvents = o > 0.5 ? "auto" : "none";
+        // Les phrases à zéro sortent de l'arbre de rendu (le texte complet reste dans .intro-srlist).
+        if (i > 0) el.style.visibility = o > 0.02 ? "visible" : "hidden";
+      });
+      // Énoncé et bouton : suivent la première et la dernière phrase.
+      const o0 = Number((lines.current[0]?.firstElementChild as HTMLElement | undefined)?.style.opacity || 0);
+      const oL = Number(lines.current[intro.lines.length - 1]?.style.opacity || 0);
+      [o0, oL].forEach((o, k) => {
+        const el = subs.current[k];
+        if (!el) return;
         el.style.opacity = String(o);
-        el.style.transform = `translate3d(0, ${y}px, 0)`;
+        el.style.visibility = o > 0.02 ? "visible" : "hidden";
         el.style.pointerEvents = o > 0.5 ? "auto" : "none";
       });
       if (starEl.current) {
@@ -107,7 +122,7 @@ export function Intro() {
       raf = 0;
       current += (target - current) * 0.2;
       if (Math.abs(target - current) < 0.0003) current = target;
-      drawText(current);
+      drawText(target); // le texte suit exactement le défilement ; seule l'image est lissée
       const idx = Math.round(current * (set.count - 1));
       if (idx !== lastDrawn && drawFrame(idx)) lastDrawn = idx;
       if (current !== target) request();
@@ -239,43 +254,55 @@ export function Intro() {
         <canvas ref={canvas} className="absolute inset-0 h-full w-full" role="img" aria-label={intro.posterAlt} />
         {/* Voile sable puis marine : lisibilité du texte en bas à gauche */}
         <div aria-hidden className="absolute inset-0 bg-sable/25 mix-blend-multiply" />
-        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-marine/85 via-marine/35 to-transparent" />
+        {/* taste-skill-ignore : voile sous le texte posé sur l'image, seule exception admise aux dégradés */}
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-marine/85 via-marine/35 to-transparent" /> {/* taste-skill-ignore */}
 
         <div ref={starEl} aria-hidden className="absolute left-[48%] top-[60%] h-16 w-16 opacity-0 md:left-[56%] md:top-[64%] md:h-24 md:w-24">
           <Star className="scintille h-full w-full text-cyan" />
         </div>
 
-        <div className="container-x intro-copy absolute inset-x-0 bottom-0 pb-24 md:pb-20">
-          <ol className="relative min-h-[9.5rem] md:min-h-[11rem]">
-            {intro.lines.map((text, i) => {
-              const last = i === intro.lines.length - 1;
-              return (
-                <li
-                  key={text}
-                  ref={(el) => {
-                    lines.current[i] = el;
-                  }}
-                  className="intro-line absolute inset-x-0 bottom-0 max-w-[16ch] text-[2.1rem] font-semibold leading-[1.05] tracking-tight text-white sm:max-w-[22ch] sm:text-5xl md:max-w-[26ch] md:text-6xl"
-                  style={{ opacity: i === 0 ? 1 : 0 }}
-                >
-                  {text}
-                  {last && (
-                    <span className="mt-6 block">
-                      <Link href="/devis" className="btn btn-cyan text-base">
-                        {intro.cta}
-                      </Link>
-                    </span>
-                  )}
-                </li>
-              );
-            })}
+        <div className="container-x intro-copy absolute inset-x-0 bottom-0 pb-24 md:pb-16">
+          <p className="intro-srlist sr-only">{intro.lines.slice(1).join(" ")}</p>
+          <ol className="relative min-h-[6.5rem] md:min-h-[9rem]">
+            {intro.lines.map((text, i) => (
+              <li
+                key={text}
+                ref={(el) => {
+                  lines.current[i] = el;
+                }}
+                className="intro-line absolute inset-x-0 bottom-0 max-w-none text-[1.75rem] font-semibold leading-[1.05] tracking-tight text-white sm:max-w-[22ch] sm:text-5xl md:max-w-[26ch] md:text-6xl"
+                style={i === 0 ? undefined : { opacity: 0, visibility: "hidden" }}
+              >
+                {i === 0 ? (
+                  <h1 style={{ fontSize: "inherit", lineHeight: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }}>
+                    {text}
+                    <span className="sr-only"> CheyClean, société de nettoyage en Belgique.</span>
+                  </h1>
+                ) : (
+                  text
+                )}
+              </li>
+            ))}
           </ol>
+          <div className="relative mt-5 min-h-[8.5rem]">
+            <div ref={(el) => { subs.current[0] = el; }} className="intro-sub absolute inset-x-0 top-0">
+              <p className="max-w-[30ch] text-xl leading-snug text-white/90">{home.statement}</p>
+              <Link href="/devis" className="btn btn-cyan mt-5 text-base">
+                {intro.cta}
+              </Link>
+            </div>
+            <div ref={(el) => { subs.current[1] = el; }} className="intro-sub intro-sub-last absolute inset-x-0 top-0" style={{ opacity: 0, visibility: "hidden" }}>
+              <Link href="/devis" className="btn btn-cyan text-base">
+                {intro.cta}
+              </Link>
+            </div>
+          </div>
         </div>
 
         <div ref={hint} className="intro-hint absolute left-5 top-[5.5rem] text-sm font-medium text-white/90 md:left-auto md:right-16" aria-hidden>
           {intro.scrollHint}
         </div>
-        <button type="button" onClick={skip} className="intro-skip btn absolute right-10 top-[5.5rem] min-h-11 border-white/60 bg-marine/40 px-5 py-2 text-sm text-white backdrop-blur hover:bg-white hover:text-marine md:bottom-8 md:right-16 md:top-auto">
+        <button type="button" onClick={skip} className="intro-skip btn absolute right-10 top-[5.5rem] min-h-11 bg-marine/60 px-5 py-2 text-[0.9375rem] text-white hover:bg-white hover:text-marine md:bottom-8 md:right-16 md:top-auto">
           {intro.skip}
         </button>
       </div>

@@ -181,8 +181,8 @@ export function QuoteFlow({ initial }: { initial: Initial }) {
           role="radio"
           aria-checked={value === o}
           onClick={() => set(name, o as never)}
-          className={`min-h-14 rounded-[14px] border-2 px-5 py-3 text-left font-semibold transition-colors ${
-            value === o ? "border-marine bg-marine text-white" : "border-ligne bg-white hover:border-marine"
+          className={`min-h-14 px-5 py-3 text-left font-semibold transition-colors ${
+            value === o ? "bg-marine text-white" : "bg-brume hover:bg-marine hover:text-white"
           }`}
         >
           {o}
@@ -197,15 +197,15 @@ export function QuoteFlow({ initial }: { initial: Initial }) {
   );
 
   return (
-    <div className="container-x pb-24 pt-10 md:pt-16">
-      <header className="mb-10 max-w-2xl">
-        <h1 className="text-[clamp(2.2rem,1.4rem+3.4vw,3.8rem)]">{quote.title}</h1>
-        <p className="mt-4 text-lg text-marine-soft">{quote.intro}</p>
+    <div data-chapter="light" className="container-x pb-24 pt-10 md:pt-16">
+      <header className="mb-12 max-w-4xl">
+        <h1 className="rise">{quote.title}</h1>
+        <p className="lead rise mt-6" style={{ "--d": "120ms" } as React.CSSProperties}>{quote.intro}</p>
       </header>
 
       {screen !== "done" && (
-        <div className="mb-8" aria-label="Progression">
-          <p className="mb-2 text-sm font-semibold text-marine-soft">{quote.stepLabel(stepNo, 5)} <span className="sr-only">: {quote.steps[stepNo - 1]}</span></p>
+        <div className="rise mb-8" style={{ "--d": "220ms" } as React.CSSProperties} aria-label="Progression">
+          <p className="sr-only">{quote.steps[stepNo - 1]}</p>
           <div className="h-1.5 overflow-hidden rounded-full bg-brume" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}>
             <div className="h-full rounded-full bg-marine transition-[width] duration-300" style={{ width: `${Math.max(4, progress * 100)}%` }} />
           </div>
@@ -221,7 +221,7 @@ export function QuoteFlow({ initial }: { initial: Initial }) {
       )}
 
       <div className={screen === "done" || screen === "formulas" ? "" : "grid gap-10 lg:grid-cols-[1.5fr_1fr] lg:gap-16"}>
-        <div className="min-h-[24rem]">
+        <div className="rise min-h-[24rem]" style={{ "--d": "320ms" } as React.CSSProperties}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div key={screen} transition={{ duration: 0.22, ease: "easeOut" }} {...slide}>
               {screen === "profile" && (
@@ -236,10 +236,10 @@ export function QuoteFlow({ initial }: { initial: Initial }) {
                           setForm((f) => ({ ...f, profile: p, type: f.profile === p ? f.type : "", formula: f.profile === p ? f.formula : null }));
                           go("type");
                         }}
-                        className="panel min-h-40 p-6 text-left transition-colors hover:border-marine"
+                        className="panel min-h-40 p-6 text-left transition-colors hover:bg-marine hover:text-white"
                       >
-                        <span className="block text-2xl font-bold">{quote.profile[p].title}</span>
-                        <span className="mt-2 block text-marine-soft">{quote.profile[p].text}</span>
+                        <span className="block text-[1.5rem] font-bold leading-tight tracking-tight">{quote.profile[p].title}</span>
+                        <span className="mt-2 block opacity-80">{quote.profile[p].text}</span>
                       </button>
                     ))}
                   </div>
@@ -257,7 +257,7 @@ export function QuoteFlow({ initial }: { initial: Initial }) {
               {screen === "surface" && (
                 <>
                   {renderTitle(quote.surface.question)}
-                  <p className="mt-3 text-marine-soft">{quote.surface.help}</p>
+                  <p className="mt-3 soft">{quote.surface.help}</p>
                   <div className="mt-8 grid items-center gap-6 sm:grid-cols-[1fr_9rem]">
                     <input
                       type="range"
@@ -281,7 +281,7 @@ export function QuoteFlow({ initial }: { initial: Initial }) {
                         className="champ pr-12"
                         aria-invalid={!!errors.surface}
                       />
-                      <span aria-hidden className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-marine-soft">
+                      <span aria-hidden className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 soft">
                         {quote.surface.unit}
                       </span>
                     </label>
@@ -322,7 +322,7 @@ export function QuoteFlow({ initial }: { initial: Initial }) {
               {screen === "note" && (
                 <>
                   {renderTitle(quote.note.question)}
-                  <p className="mt-3 text-marine-soft">{quote.note.help}</p>
+                  <p className="mt-3 soft">{quote.note.help}</p>
                   <label className="mt-8 block max-w-xl">
                     <span className="mb-2 block font-semibold">{quote.note.label}</span>
                     <textarea className="champ min-h-32" maxLength={600} value={form.note} onChange={(e) => set("note", e.target.value)} />
@@ -448,12 +448,12 @@ export function QuoteFlow({ initial }: { initial: Initial }) {
 
 function Recap({ items }: { items: [string, string][] }) {
   return items.length === 0 ? (
-    <p className="px-6 pb-6 pt-3 text-marine-soft lg:pt-3">{quote.summaryEmpty}</p>
+    <p className="px-6 pb-6 pt-3 soft lg:pt-3">{quote.summaryEmpty}</p>
   ) : (
     <dl className="grid gap-4 px-6 pb-6 pt-4">
       {items.map(([k, v]) => (
         <div key={k}>
-          <dt className="text-sm font-semibold text-marine-soft">{k}</dt>
+          <dt className="text-sm font-semibold soft">{k}</dt>
           <dd className="break-words">{v}</dd>
         </div>
       ))}

@@ -9,25 +9,25 @@ const tabs: { id: Profile; label: string }[] = [
   { id: "societe", label: "Sociétés" },
 ];
 
-export function FormulaPreview() {
+export function FormulaPreview({ tone = "brume" }: { tone?: "papier" | "brume" }) {
   const [profile, setProfile] = useState<Profile>("particulier");
   return (
     <div>
-      <div role="group" aria-label="Choisir un profil" className="mb-10 inline-flex rounded-full border border-ligne bg-white p-1">
+      <div role="group" aria-label="Choisir un profil" className="mb-12 inline-flex gap-2">
         {tabs.map((t) => (
           <button
             key={t.id}
             type="button"
             aria-pressed={profile === t.id}
             onClick={() => setProfile(t.id)}
-            className={`min-h-11 rounded-full px-6 font-semibold transition-colors ${profile === t.id ? "bg-marine text-white" : "hover:bg-brume"}`}
+            className={`btn min-h-11 py-2 ${profile === t.id ? "btn-primary" : "btn-ghost"}`}
           >
             {t.label}
           </button>
         ))}
       </div>
-      <div className="md:py-5">
-        <FormulaCards items={formulas[profile]} profile={profile} />
+      <div className="md:py-6">
+        <FormulaCards items={formulas[profile]} profile={profile} tone={tone} />
       </div>
     </div>
   );

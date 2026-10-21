@@ -125,19 +125,18 @@ export const frequencies = [
 ];
 
 export const quote = {
-  title: "Votre devis, en quelques questions",
+  title: "Demandez votre devis",
   intro: "Répondez à quelques questions et recevez un devis sur mesure.",
   summaryTitle: "Votre demande",
   summaryEmpty: "Vos réponses apparaîtront ici.",
   summaryToggle: "Voir votre demande",
   back: "Retour",
   next: "Continuer",
-  stepLabel: (n: number, total: number) => `Étape ${n} sur ${total}`,
   steps: ["Profil", "Lieu", "Formule", "Coordonnées", "Confirmation"],
   profile: {
     question: "Pour qui est ce nettoyage ?",
     particulier: { title: "Un particulier", text: "Appartement, maison, villa." },
-    societe: { title: "Une société", text: "Bureaux, commerces, écoles, salles de sport." },
+    societe: { title: "Une société", text: "Bureaux, écoles, commerces." },
   },
   type: { question: "Quel type de lieu ?" },
   surface: { question: "Quelle surface environ ?", help: "Une estimation suffit.", unit: "m²" },
@@ -210,6 +209,13 @@ export const advisor = {
 };
 
 export const home = {
+  statement: "CheyClean, société de nettoyage en abonnement partout en Belgique.",
+  steps: [
+    { t: "D'abord, vous décrivez votre lieu.", d: "Type de lieu, surface, ville et fréquence : quatre réponses suffisent." },
+    { t: "Ensuite, vous choisissez une formule.", d: "Trois formules par profil, ou l'avis de notre assistant si vous hésitez." },
+    { t: "Nous vous envoyons un devis.", d: "Sur mesure, avec un prix fixé après échange avec vous." },
+    { t: "Puis nous intervenons à jours fixes.", d: "Une équipe attitrée, aux horaires convenus, en toute discrétion." },
+  ],
   audiences: {
     title: "Un nettoyage pensé pour votre lieu",
     particuliers: {
@@ -230,8 +236,11 @@ export const home = {
   faqTitle: "Questions fréquentes",
   finalCta: {
     title: "Parlons de votre lieu.",
-    text: "Quelques questions suffisent pour recevoir un devis sur mesure.",
+    line1: "On commence",
+    line2: "par votre lieu ?",
+    text: "Quelques questions suffisent pour recevoir un devis sur mesure. Vous préférez parler ? Écrivez-nous sur WhatsApp.",
     button: "Demander mon devis",
+    or: "ou",
   },
 };
 
@@ -264,7 +273,7 @@ export const audiencePages = {
     h1: "Le nettoyage de votre maison",
     meta: "Nettoyage à domicile en Belgique : appartement, maison, villa, après travaux. Formules en abonnement, devis sur mesure.",
     intro:
-      "Un intérieur net sans y penser, en abonnement. Une équipe régulière, des gestes précis et le respect de chaque matière.",
+      "Un intérieur net sans y penser, en abonnement, par une équipe régulière.",
     servicesTitle: "Ce que nous entretenons",
     services: [
       { t: "Appartements et maisons", d: "Sols, cuisine, sanitaires, poussières et surfaces, à votre rythme." },
@@ -291,7 +300,7 @@ export const audiencePages = {
     h1: "Le nettoyage de vos locaux",
     meta: "Nettoyage de bureaux, salles de sport, écoles, bibliothèques et commerces en Belgique. Abonnement et devis sur mesure.",
     intro:
-      "Des locaux professionnels impeccables, en abonnement, sans perturber votre activité. Interventions discrètes, ponctuelles et suivies.",
+      "Des locaux impeccables en abonnement, sans perturber votre activité.",
     servicesTitle: "Les lieux que nous entretenons",
     services: [
       { t: "Bureaux", d: "Postes de travail, salles de réunion, cuisines et sanitaires." },
@@ -320,7 +329,7 @@ export const about = {
   h1: "À propos de CheyClean",
   meta: "La méthode, les engagements et les produits de CheyClean, société de nettoyage en Belgique.",
   intro:
-    "CheyClean est une société de nettoyage belge. Nous entretenons des domiciles et des locaux professionnels en abonnement, avec une exigence constante.",
+    "Société de nettoyage belge, nous entretenons domiciles et locaux professionnels en abonnement.",
   methodTitle: "Notre méthode",
   method:
     "Chaque lieu a ses matières, ses usages et son rythme. Nous commençons par écouter, puis nous établissons un plan d'entretien précis. Une équipe attitrée l'applique et un interlocuteur unique assure le suivi.",
@@ -339,7 +348,7 @@ export const about = {
 export const contact = {
   h1: "Contact",
   meta: "Contactez CheyClean par téléphone, WhatsApp ou via le parcours de devis.",
-  intro: "Pour une demande de devis, le parcours guidé est le plus rapide. Pour toute autre question, écrivez-nous.",
+  intro: "Pour un devis, le parcours guidé est le plus rapide. Pour le reste, écrivez-nous.",
   phone: "Téléphone",
   whatsapp: "WhatsApp",
   quote: "Demander mon devis",
@@ -359,8 +368,7 @@ export const cityPage = {
   h1: (city: string) => `Nettoyage à ${city}`,
   meta: (city: string) =>
     `Nettoyage de bureaux, commerces et domiciles à ${city}. Abonnement et devis sur mesure avec CheyClean.`,
-  intro: (city: string) =>
-    `CheyClean entretient les domiciles et les locaux professionnels à ${city} : bureaux, salles de sport, écoles, commerces. Une équipe régulière, des horaires fixes et un devis adapté à votre lieu.`,
+  intro: (city: string) => `Bureaux, commerces et domiciles à ${city} : une équipe régulière, des horaires fixes, un devis sur mesure.`,
   cta: "Demander mon devis",
 };
 
