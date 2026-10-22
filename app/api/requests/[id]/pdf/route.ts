@@ -11,7 +11,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
   if (!rateLimit(`pdf:${clientIp(req)}`, 30, 10 * 60_000).ok) return new Response("Trop de requêtes.", { status: 429 });
   // Même réponse pour « introuvable » et « jeton faux » : on ne révèle pas quelles références existent.
   const notFound = () => new Response("Document introuvable.", { status: 404 });
-  if (!isValidId(id) || token.length < 16) return notFound();
+  if (!isValidId("requests", id) || token.length < 16) return notFound();
   const record = await findRequest(id);
   if (!record || !tokenMatches(record, token)) return notFound();
   const pdf = await buildRequestPdf(record);

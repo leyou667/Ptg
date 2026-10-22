@@ -37,3 +37,8 @@ Montants en centimes entiers. La TVA est calculée par taux sur la somme des bas
 ## Tests
 
 `npm test` : `tests/billing.test.ts` couvre les totaux, les transitions de devis, les bloqueurs, la numérotation sans trou et l'unicité de la facture par devis, avec des valeurs de test qui ne sont ni des prix ni des taux réels.
+
+
+## État
+
+Les devis sont implémentés (brouillon, émission numérotée, PDF, statuts, duplication) dans `/admin`. Les factures : logique et tests dans `lib/billing/workflow.ts`, sans écran ni PDF, et bloquées tant que l'identité du vendeur, la TVA et le catalogue ne sont pas configurés.

@@ -36,6 +36,19 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        // L'administration et son API : jamais indexées, jamais mises en cache (ni par le navigateur, ni par un CDN).
+        source: "/:prefix(admin|api/admin)/:path*",
+        headers: [
+          { key: "Cache-Control", value: "no-store, max-age=0" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+          { key: "Referrer-Policy", value: "no-referrer" },
+        ],
+      },
+      {
+        source: "/api/requests/:path*",
+        headers: [{ key: "Cache-Control", value: "no-store, max-age=0" }],
+      },
+      {
         source: "/frames/(.*)",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },

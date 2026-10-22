@@ -44,11 +44,24 @@ Validation par étape (messages en français), retour en arrière sans perte, br
 
 ## Stockage
 
-`POST /api/requests` valide les données, les enregistre dans `DATA_DIR/requests/DEV-AAMM-XXXXXX.json` (écriture atomique, jamais d'écrasement), puis renvoie la référence. Le PDF récapitulatif est généré à la demande par `GET /api/requests/[id]/pdf?token=...` ; le jeton n'est remis qu'au client qui vient d'envoyer sa demande.
+`POST /api/requests` valide les données puis les enregistre via `lib/storage/` (interface `create / get / replace / list / nextSequence`). Deux supports, choisis automatiquement :
 
-**Si aucun stockage durable n'est disponible** (hébergement serverless sans disque persistant et sans `DATA_DIR`) et qu'aucun email n'est configuré, l'envoi est refusé avec un message clair : rien n'est jamais simulé. Sur Vercel, utilisez un volume persistant ou remplacez `lib/storage.ts` par une base de données (l'interface `create / get / replace` reste la même). L'email (Resend) est un canal en plus, pas un remplacement du stockage.
+1. **PostgreSQL** si `DATABASE_URL` est défini (recommandé en production, indispensable sur Vercel) : tables `documents` et `counters` créées au premier usage, révisions optimistes (deux onglets ne s'écrasent pas), numérotation des devis atomique.
+2. **Fichiers JSON** dans `DATA_DIR` sinon, si le dossier est inscriptible (disque persistant requis).
 
-Les demandes se lisent dans le dossier `data/requests/` (un fichier JSON par demande). Il n'y a pas encore d'écran d'administration.
+Sans support utilisable, les écritures sont refusées (503) : rien n'est jamais simulé. Le PDF récapitulatif client est généré à la demande avec un jeton remis seulement au client qui vient d'envoyer sa demande. L'email (Resend) est un canal en plus, pas un remplacement du stockage.
+
+## Administration (`/admin`)
+
+Écran interne : liste des demandes (onglets Nouvelles / En cours / Devis envoyé / Archivées avec compteurs, recherche, filtre particulier/société), fiche complète avec toutes les réponses, notes internes et historique des statuts, préparation de devis (lignes depuis le catalogue ou libres, prix, TVA, remise), émission avec numéro `D-AAAA-NNNN` et PDF professionnel, suivi accepté/refusé/expiré, duplication. Les réglages (catalogue de prestations, taux de TVA, identité du vendeur et conditions) se saisissent dans l'écran ; aucun prix, taux ou identité n'est préenregistré.
+
+Accès : mot de passe haché (scrypt), session signée en cookie HttpOnly/SameSite=Strict, jeton CSRF et contrôle d'origine sur chaque modification, révocation à la déconnexion, limitation des essais, `proxy.ts` en première barrière puis nouveau contrôle dans chaque page et route, `noindex` et `no-store`. Configuration :
+
+```bash
+node scripts/hash-password.mjs   # affiche ADMIN_PASSWORD_HASH et ADMIN_SESSION_SECRET
+```
+
+Tests avec une vraie base : `TEST_DATABASE_URL=postgres://… npx vitest run`.
 
 ## Structure
 
@@ -56,7 +69,7 @@ Les demandes se lisent dans le dossier `data/requests/` (un fichier JSON par dem
 - `components/Intro.tsx` : intro pilotée par le scroll, séquence d'images dessinée sur un `<canvas>` (GSAP ScrollTrigger, chargé à la demande). Compatible iOS Safari, contrairement au pilotage de `<video>.currentTime`.
 - `components/questionnaire/` : moteur des deux questionnaires ; `components/Advisor.tsx` : assistant IA.
 - `app/api/requests`, `app/api/advisor` : routes serveur (validation zod, honeypot, limitation par IP).
-- `lib/requests/`, `lib/pdf/`, `lib/storage.ts`, `lib/billing/`, `config/` : demandes, PDF, stockage, facturation.
+- `lib/requests/`, `lib/pdf/`, `lib/storage/`, `lib/admin/`, `lib/billing/`, `config/` : demandes, PDF, stockage, facturation.
 - `public/frames/{desktop,mobile}/` : images WebP de l'intro (24 i/s ordinateur, 12 i/s mobile), générées par `scripts/make-frames.sh` depuis `assets/intro-source.mp4`.
 - `public/images/logo*.png` : logo à fond transparent (`scripts/make-logo.py` le régénère depuis la capture).
 
@@ -68,6 +81,8 @@ Les demandes se lisent dans le dossier `data/requests/` (un fichier JSON par dem
 
 ## À compléter avant la mise en ligne
 
+- **Hébergement** : `DATABASE_URL` (PostgreSQL), `ADMIN_PASSWORD_HASH`, `ADMIN_SESSION_SECRET`.
+- **Dans /admin** : identité du vendeur (dont numéro d'entreprise et IBAN contrôlés), taux de TVA, catalogue de prestations, conditions du devis. Un devis ne s'émet pas tant que c'est incomplet.
 - Mentions légales : raison sociale, adresse, numéro BCE et TVA.
 - Durée de conservation des demandes (politique de confidentialité).
 - Email de réception (`CONTACT_EMAIL`) et expéditeur vérifié sur Resend.
@@ -76,7 +91,8 @@ Les demandes se lisent dans le dossier `data/requests/` (un fichier JSON par dem
 
 ## Limites connues
 
-- La limitation de requêtes est en mémoire (par instance serverless) ; pour un contrôle global, utiliser un stockage partagé (Upstash Redis).
+- Administration : un seul mot de passe, pas de double authentification, pas d'export CSV, pas d'écran ni de PDF de facture (logique et tests seulement).
+- La limitation de requêtes (dont la connexion admin) est en mémoire (par instance serverless) ; pour un contrôle global, utiliser un stockage partagé (Upstash Redis).
 - La CSP autorise `'unsafe-inline'` pour les scripts (pages statiques Next.js sans nonce).
 
 ## Checklist finale

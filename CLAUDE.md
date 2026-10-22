@@ -70,3 +70,7 @@ WhatsApp and phone: +32 486 37 45 48 (`https://wa.me/32486374548`), with a float
 ## Performance targets
 
 Lighthouse 95+, LCP < 2.5 s, CLS < 0.1; images via `next/image` (WebP/AVIF), self-hosted fonts, progressive loading of the intro frames.
+
+## Administration
+
+`/admin` (groupe de routes `app/admin/(console)`) et `/api/admin/*` : demandes, devis, prestations, entreprise. Stockage via `lib/storage/` (PostgreSQL si `DATABASE_URL`, sinon fichiers `DATA_DIR`; sinon refus 503). Accès : `proxy.ts` + `requireAdmin()` dans CHAQUE page et route (ne jamais compter sur le proxy seul), CSRF `x-csrf-token` + contrôle d'origine sur les mutations, session révoquée à la déconnexion. Aucun prix, TVA ni donnée vendeur n'est inventé : tout se saisit dans l'admin. Un devis émis est figé (instantané vendeur/client/TVA/totaux). Montants en centimes entiers. Tests PG : `TEST_DATABASE_URL`. Pour arrêter un serveur de test, tuer par PID (`ps -eo pid,args | grep [n]ext-server`), jamais `pkill -f next`.
