@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #0c2a2d;
-  --color-ink-soft: #4a5b5c;
+  --color-ink: #0b1f3f;
+  --color-ink-soft: #46546b;
   --color-cyan: #12c4dc;
-  --color-ground: #f7f7f5;
-  --color-stone: #e7e5df;
+  --color-ground: #eaf5f8;
+  --color-stone: #d3e8ee;
   --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
-  --shadow-flotte: 0 18px 40px -18px rgb(12 42 45 / 0.5);
+  --shadow-flotte: 0 22px 44px -16px rgb(11 31 63 / 0.38);
 }
 
 :root { color-scheme: light; }
@@ -62,8 +62,8 @@ html.lenis, html.lenis body { height: auto; }
   }
   .btn:hover { transform: translate3d(0, -2px, 0); }
   .btn:active { transform: translate3d(0, 1px, 0); }
-  .btn-primary { background: var(--color-ink); color: #fff; }
-  .btn-primary:hover { background: #16474b; }
+  .btn-primary { background: var(--color-cyan); color: var(--color-ink); }
+  .btn-primary:hover { background: #46d6e8; }
   .btn-cyan { background: var(--color-cyan); color: var(--color-ink); }
   .btn-cyan:hover { background: #46d6e8; }
   .btn-ghost { background: var(--color-stone); color: var(--color-ink); }

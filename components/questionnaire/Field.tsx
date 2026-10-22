@@ -33,7 +33,7 @@ export function Field({ def, value, error, onChange, onBlur, idPrefix }: Props) 
             type="checkbox"
             checked={value === true}
             onChange={(e) => onChange(def.name, e.target.checked)}
-            className="h-6 w-6 shrink-0 accent-[#0c2a2d]"
+            className="h-6 w-6 shrink-0 accent-[#0b1f3f]"
           />
           <span>{def.label}</span>
         </label>

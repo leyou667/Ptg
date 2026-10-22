@@ -49,7 +49,7 @@ node .agents/skills/design-taste-frontend/scripts/inspect.mjs http://localhost:3
 
 `--allow gradient` is only for the marine scrim under the intro text. Pages that are tools or legal text also need `--allow few-pictures`.
 
-- Palette: ink/deep teal `#0C2A2D` (text and dark fields), cyan `#12C4DC` (action and the star only), ground `#F7F7F5`, stone `#E7E5DF` (one tone step for surfaces and alternate fields). Tokens: `ink`, `ground`, `stone`, `cyan`. The logo PNGs keep the brand navy. No yellow-cream ground, no violet. Cyan is never body text on a light ground.
+- Palette (updated by the user): ink = brand navy `#0B1F3F`, ground `#EAF5F8`, stone `#D3E8EE`, buttons cyan. Old: ink/deep teal `#0C2A2D` (text and dark fields), cyan `#12C4DC` (action and the star only), ground `#F7F7F5`, stone `#E7E5DF` (one tone step for surfaces and alternate fields). Tokens: `ink`, `ground`, `stone`, `cyan`. The logo PNGs keep the brand navy. No yellow-cream ground, no violet. Cyan is never body text on a light ground.
 - One family: Instrument Sans (next/font, self-hosted). Five type sizes: 15, 18, 24, titles, display. Headlines at most two lines at every width, statements at most 4 lines on a phone.
 - No eyebrows or pill badges above headings, no thin rules or outlined boxes (separate with space or a tone step), no gradients except the intro scrim, no shadows at rest (only on what floats: the advisor dialog, the cookie bar is in flow), no glass or blur, no index numbering ("Étape 2"), no icon cards, no styled accent word in a headline.
 - Colour by chapter: sections are full-width fields (`data-chapter="light|dark"`); the header takes the ink of the chapter under it. Every page keeps the same pair of outer margins.

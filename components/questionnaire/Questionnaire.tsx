@@ -350,7 +350,7 @@ export function Questionnaire({ profile, initialFormula }: { profile: Profile; i
                       onChange={(e) => change("consent", e.target.checked)}
                       aria-invalid={errs.consent ? true : undefined}
                       aria-describedby={errs.consent ? "err-consent" : undefined}
-                      className="mt-0.5 h-6 w-6 shrink-0 accent-[#0c2a2d]"
+                      className="mt-0.5 h-6 w-6 shrink-0 accent-[#0b1f3f]"
                     />
                     <span>
                       {flow.consent}{" "}

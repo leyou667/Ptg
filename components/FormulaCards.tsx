@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import type { Formula, FormulaId, Profile } from "@/content/fr";
 import { quote } from "@/content/fr";
 import { Star } from "./Star";
@@ -14,21 +17,62 @@ type Props = {
 };
 
 /**
- * Trois formules, pas trois cartes identiques : la recommandée est plus grande, en ink ; les deux autres
- * sont plates, d'un pas de tonalité. Les lignes comparables sont alignées d'une formule à l'autre (sous-grille).
+ * Trois formules côte à côte. Sur ordinateur : la recommandée est plus grande, en ink. Sur téléphone : un carrousel
+ * qu'on fait glisser, la formule du milieu s'agrandit, ses voisines dépassent des deux côtés. Chaque formule porte
+ * une ombre (elle flotte au-dessus du fond).
  */
 export function FormulaCards({ items, profile, selected, onChoose, tone = "stone" }: Props) {
-  const plain = tone === "stone" ? "bg-stone" : "bg-white";
+  const plain = tone === "stone" ? "bg-ground" : "bg-stone";
+  const rail = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = rail.current;
+    if (!el) return;
+    const cards = Array.from(el.querySelectorAll<HTMLElement>("[data-card]"));
+    let frame = 0;
+    const apply = () => {
+      frame = 0;
+      const mid = el.scrollLeft + el.clientWidth / 2;
+      for (const c of cards) {
+        const centre = c.offsetLeft + c.offsetWidth / 2;
+        const d = Math.min(1, Math.abs(centre - mid) / c.offsetWidth);
+        c.style.setProperty("--s", String(1.04 - 0.14 * d));
+        c.style.setProperty("--o", String(1 - 0.35 * d));
+      }
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(apply);
+    };
+    // Au départ : la formule recommandée (ou choisie) est au milieu.
+    const start = cards[Math.max(0, items.findIndex((f) => (selected ? f.id === selected : f.recommended)))];
+    if (start && el.scrollWidth > el.clientWidth) el.scrollLeft = start.offsetLeft + start.offsetWidth / 2 - el.clientWidth / 2;
+    apply();
+    el.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+    // Position de départ seulement : choisir une formule ne doit pas faire sauter le carrousel.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items]);
+
   return (
-    <div className="grid items-stretch gap-10 md:grid-cols-[1fr_1.14fr_1fr] md:gap-x-5 md:gap-y-0">
+    <div
+      ref={rail}
+      tabIndex={-1}
+      className="-mx-5 flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto px-[11%] py-10 [scrollbar-width:none] md:mx-0 md:grid md:snap-none md:grid-cols-[1fr_1.14fr_1fr] md:gap-x-6 md:overflow-visible md:px-0 md:py-6 [&::-webkit-scrollbar]:hidden"
+    >
       {items.map((f) => {
         const rec = !!f.recommended;
         const isSel = selected === f.id;
         return (
           <article
             key={f.id}
+            data-card
             aria-label={`Formule ${f.name}`}
-            className={`grid gap-0 p-6 md:row-span-5 md:grid-rows-subgrid md:p-9 ${
+            className={`flex w-[78%] shrink-0 snap-center flex-col rounded-[28px] p-6 shadow-flotte transition-[box-shadow] max-md:[opacity:var(--o,1)] max-md:[transform:scale(var(--s,1))] md:w-auto md:p-9 ${
               rec ? "on-dark bg-ink text-white md:-my-6 md:py-14" : plain
             } ${isSel ? "outline outline-4 outline-offset-[-4px] outline-cyan" : ""}`}
           >
@@ -46,7 +90,7 @@ export function FormulaCards({ items, profile, selected, onChoose, tone = "stone
                 <p className="mt-1">{r.value}</p>
               </div>
             ))}
-            <div className="pt-6">
+            <div className="mt-auto pt-6">
               {onChoose ? (
                 <button type="button" className={`btn w-full ${rec ? "btn-cyan" : "btn-primary"}`} aria-pressed={isSel} onClick={() => onChoose(f.id)}>
                   {isSel ? quote.formulas.chosen : quote.formulas.choose}

@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "./" },
 };
 
-export const viewport: Viewport = { themeColor: "#f7f7f5", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#eaf5f8", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
