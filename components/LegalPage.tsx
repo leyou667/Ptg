@@ -5,7 +5,7 @@ export function LegalPage({ h1, intro, sections }: { h1: string; intro?: string;
   return (
     <>
       <PageHero h1={h1} intro={intro} compact />
-      <section data-chapter="light" className="field-brume section">
+      <section data-chapter="light" className="field-stone section">
         <div className="container-x grid gap-14">
           {sections.map((s, i) => (
             <div key={s.t} className="grid12 gap-y-3">

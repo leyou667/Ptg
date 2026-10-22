@@ -3,10 +3,17 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { home, intro } from "@/content/fr";
+import { choice } from "@/content/questionnaire";
+import { ChoiceTiles } from "./ChoiceTiles";
 import { Star } from "./Star";
 
-const DURATION = 10;
-const SEGMENT = DURATION / intro.lines.length; // 2 s de défilement par phrase
+// Quatre phrases, puis les deux grands choix. Progression du défilement (0 à 1) :
+//   0 à 0,62 : les phrases ; 0,62 à 0,7 : respiration ; 0,7 à 0,82 : les choix apparaissent ; ensuite ils restent.
+const PHRASES = intro.lines.slice(0, 4);
+const SEGMENT = 0.62 / PHRASES.length;
+const CHOICES_FROM = 0.7;
+const CHOICES_FULL = 0.82;
+const FRAMES_END = 0.7; // la séquence d'images est finie quand les choix arrivent
 
 // Séquences d'images extraites de la vidéo (scripts/make-frames.sh).
 const SETS = {
@@ -25,6 +32,8 @@ export function Intro() {
   const starEl = useRef<HTMLDivElement>(null);
   const hint = useRef<HTMLDivElement>(null);
   const subs = useRef<(HTMLDivElement | null)[]>([]);
+  const choicesEl = useRef<HTMLDivElement>(null);
+  const skipEl = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const root = wrap.current;
@@ -77,21 +86,16 @@ export function Intro() {
     };
 
     const drawText = (p: number) => {
-      const t = p * DURATION;
       lines.current.forEach((el, i) => {
         if (!el) return;
-        const local = (t - i * SEGMENT) / SEGMENT; // 0..1 dans la fenêtre de la phrase
-        const last = i === intro.lines.length - 1;
+        const local = (p - i * SEGMENT) / SEGMENT; // 0..1 dans la fenêtre de la phrase
         let o = 0;
         let y = 14;
         if (local >= 0 && local <= 1) {
           const fadeIn = i === 0 ? 1 : Math.min(1, local / 0.3);
-          const fadeOut = last ? 1 : Math.min(1, (1 - local) / 0.25);
+          const fadeOut = Math.min(1, (1 - local) / 0.25);
           o = Math.min(fadeIn, fadeOut);
           y = (1 - fadeIn) * 14;
-        } else if (last && local > 1) {
-          o = 1;
-          y = 0;
         }
         // La première phrase est le <h1> : l'opacité va sur le titre lui-même, pas sur son <li>.
         const node = (i === 0 ? el.firstElementChild : el) as HTMLElement;
@@ -101,21 +105,32 @@ export function Intro() {
         // Les phrases à zéro sortent de l'arbre de rendu (le texte complet reste dans .intro-srlist).
         if (i > 0) el.style.visibility = o > 0.02 ? "visible" : "hidden";
       });
-      // Énoncé et bouton : suivent la première et la dernière phrase.
+      // Énoncé et bouton : suivent la première phrase.
       const o0 = Number((lines.current[0]?.firstElementChild as HTMLElement | undefined)?.style.opacity || 0);
-      const oL = Number(lines.current[intro.lines.length - 1]?.style.opacity || 0);
-      [o0, oL].forEach((o, k) => {
-        const el = subs.current[k];
-        if (!el) return;
-        el.style.opacity = String(o);
-        el.style.visibility = o > 0.02 ? "visible" : "hidden";
-        el.style.pointerEvents = o > 0.5 ? "auto" : "none";
-      });
+      const sub = subs.current[0];
+      if (sub) {
+        sub.style.opacity = String(o0);
+        sub.style.visibility = o0 > 0.02 ? "visible" : "hidden";
+        sub.style.pointerEvents = o0 > 0.5 ? "auto" : "none";
+      }
+      // Les deux grands choix.
+      const c = Math.min(1, Math.max(0, (p - CHOICES_FROM) / (CHOICES_FULL - CHOICES_FROM)));
+      const ch = choicesEl.current;
+      if (ch) {
+        ch.style.opacity = String(c);
+        ch.style.transform = `translate3d(0, ${(1 - c) * 24}px, 0)`;
+        ch.style.visibility = c > 0.02 ? "visible" : "hidden";
+        ch.style.pointerEvents = c > 0.5 ? "auto" : "none";
+      }
       if (starEl.current) {
-        const s = (t - SEGMENT) / SEGMENT;
+        const s = (p - SEGMENT) / SEGMENT;
         starEl.current.style.opacity = s > 0.05 && s < 0.95 ? String(Math.min(1, s * 5, (1 - s) * 5)) : "0";
       }
       if (hint.current) hint.current.style.opacity = String(Math.max(0, 1 - p * 14));
+      if (skipEl.current) {
+        skipEl.current.style.opacity = String(1 - c);
+        skipEl.current.style.visibility = c > 0.9 ? "hidden" : "visible";
+      }
     };
 
     const tick = () => {
@@ -123,7 +138,7 @@ export function Intro() {
       current += (target - current) * 0.2;
       if (Math.abs(target - current) < 0.0003) current = target;
       drawText(target); // le texte suit exactement le défilement ; seule l'image est lissée
-      const idx = Math.round(current * (set.count - 1));
+      const idx = Math.round(Math.min(1, current / FRAMES_END) * (set.count - 1));
       if (idx !== lastDrawn && drawFrame(idx)) lastDrawn = idx;
       if (current !== target) request();
     };
@@ -241,30 +256,34 @@ export function Intro() {
     };
   }, []);
 
+  /** Saute l'animation : arrive directement sur l'écran des deux choix. */
   const skip = () => {
-    const el = document.getElementById("contenu");
-    if (!el) return;
-    if (window.__lenis) window.__lenis.scrollTo(el, { immediate: true });
-    else el.scrollIntoView();
+    const root = wrap.current;
+    if (!root) return;
+    const reduced = root.classList.contains("intro-static") || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const target = reduced ? document.getElementById("choix") : null;
+    const top = target ? target.getBoundingClientRect().top + window.scrollY - 80 : root.offsetTop + (root.offsetHeight - window.innerHeight) * 0.92;
+    if (window.__lenis) window.__lenis.scrollTo(top, { immediate: true });
+    else window.scrollTo({ top, behavior: "instant" as ScrollBehavior });
   };
 
   return (
     <section ref={wrap} aria-label="Introduction" className="intro relative -mt-16">
-      <div ref={stage} className="intro-stage sticky top-0 h-svh w-full overflow-hidden bg-marine">
+      <div ref={stage} className="intro-stage sticky top-0 h-svh w-full overflow-hidden bg-ink">
         <canvas ref={canvas} className="absolute inset-0 h-full w-full" role="img" aria-label={intro.posterAlt} />
-        {/* Voile sable puis marine : lisibilité du texte en bas à gauche */}
-        <div aria-hidden className="absolute inset-0 bg-sable/25 mix-blend-multiply" />
+        {/* Voile sous le texte posé sur l'image */}
+        <div aria-hidden className="absolute inset-0 bg-ink/25" />
         {/* taste-skill-ignore : voile sous le texte posé sur l'image, seule exception admise aux dégradés */}
-        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-marine/85 via-marine/35 to-transparent" /> {/* taste-skill-ignore */}
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/40 to-transparent" /> {/* taste-skill-ignore */}
 
         <div ref={starEl} aria-hidden className="absolute left-[48%] top-[60%] h-16 w-16 opacity-0 md:left-[56%] md:top-[64%] md:h-24 md:w-24">
           <Star className="scintille h-full w-full text-cyan" />
         </div>
 
         <div className="container-x intro-copy absolute inset-x-0 bottom-0 pb-24 md:pb-16">
-          <p className="intro-srlist sr-only">{intro.lines.slice(1).join(" ")}</p>
+          <p className="intro-srlist sr-only">{intro.lines.slice(1, 4).join(" ")}</p>
           <ol className="relative min-h-[6.5rem] md:min-h-[9rem]">
-            {intro.lines.map((text, i) => (
+            {PHRASES.map((text, i) => (
               <li
                 key={text}
                 ref={(el) => {
@@ -287,22 +306,31 @@ export function Intro() {
           <div className="relative mt-5 min-h-[8.5rem]">
             <div ref={(el) => { subs.current[0] = el; }} className="intro-sub absolute inset-x-0 top-0">
               <p className="max-w-[30ch] text-xl leading-snug text-white/90">{home.statement}</p>
-              <Link href="/devis" className="btn btn-cyan mt-5 text-base">
+              <button type="button" onClick={skip} className="btn btn-cyan mt-5 text-base">
                 {intro.cta}
-              </Link>
-            </div>
-            <div ref={(el) => { subs.current[1] = el; }} className="intro-sub intro-sub-last absolute inset-x-0 top-0" style={{ opacity: 0, visibility: "hidden" }}>
-              <Link href="/devis" className="btn btn-cyan text-base">
-                {intro.cta}
-              </Link>
+              </button>
             </div>
           </div>
+        </div>
+
+        {/* L'interface principale : deux grands choix, qui ouvrent directement le questionnaire. */}
+        <div
+          id="choix"
+          ref={choicesEl}
+          className="intro-choices container-x absolute inset-x-0 bottom-0 pb-24"
+          style={{ opacity: 0, visibility: "hidden" }}
+        >
+          <p className="text-[1.125rem] text-white/85 md:text-xl">{choice.tagline}</p>
+          <h2 className="mt-2 text-white" style={{ fontSize: "clamp(1.75rem, 1rem + 2.6vw, 3.5rem)" }}>
+            {choice.title}
+          </h2>
+          <ChoiceTiles className="mt-5 md:mt-7" />
         </div>
 
         <div ref={hint} className="intro-hint absolute left-5 top-[5.5rem] text-sm font-medium text-white/90 md:left-auto md:right-16" aria-hidden>
           {intro.scrollHint}
         </div>
-        <button type="button" onClick={skip} className="intro-skip btn absolute right-10 top-[5.5rem] min-h-11 bg-marine/60 px-5 py-2 text-[0.9375rem] text-white hover:bg-white hover:text-marine md:bottom-8 md:right-16 md:top-auto">
+        <button ref={skipEl} type="button" onClick={skip} className="intro-skip btn absolute right-10 top-[5.5rem] min-h-11 bg-ink/60 px-5 py-2 text-[0.9375rem] text-white hover:bg-white hover:text-ink md:bottom-8 md:right-16 md:top-auto">
           {intro.skip}
         </button>
       </div>

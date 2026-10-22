@@ -6,10 +6,10 @@ import { Reveal } from "./Reveal";
 /** Un vrai pied de page : le nom ouvre, les lieux et les contacts suivent. */
 export function Footer() {
   return (
-    <footer data-chapter="light" className="field-brume pb-28 pt-20 md:pb-10 md:pt-28">
+    <footer data-chapter="light" className="field-stone pb-28 pt-16 md:pb-10 md:pt-20">
       <div className="container-x">
         <Reveal>
-          <Logo className="h-auto w-[min(100%,34rem)]" />
+          <Logo className="h-auto w-[min(100%,20rem)]" />
         </Reveal>
 
         <div className="grid12 mt-16 gap-y-12">
@@ -40,7 +40,7 @@ export function Footer() {
           </Reveal>
         </div>
 
-        <div className="small mt-20 flex flex-wrap items-center justify-between gap-4">
+        <div className="small mt-14 flex flex-wrap items-center justify-between gap-4 md:pr-20">
           <p className="soft">
             © {new Date().getFullYear()} {footer.rights}
           </p>

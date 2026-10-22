@@ -9,16 +9,16 @@ type Props = {
   selected?: FormulaId | null;
   /** Mode parcours : bouton qui appelle onChoose. Sinon lien vers /devis. */
   onChoose?: (id: FormulaId) => void;
-  /** Sur fond brume, les formules sobres passent en papier pour garder un pas de tonalité. */
-  tone?: "papier" | "brume";
+  /** Sur fond stone, les formules sobres passent en ground pour garder un pas de tonalité. */
+  tone?: "ground" | "stone";
 };
 
 /**
- * Trois formules, pas trois cartes identiques : la recommandée est plus grande, en marine ; les deux autres
+ * Trois formules, pas trois cartes identiques : la recommandée est plus grande, en ink ; les deux autres
  * sont plates, d'un pas de tonalité. Les lignes comparables sont alignées d'une formule à l'autre (sous-grille).
  */
-export function FormulaCards({ items, profile, selected, onChoose, tone = "brume" }: Props) {
-  const plain = tone === "brume" ? "bg-brume" : "bg-white";
+export function FormulaCards({ items, profile, selected, onChoose, tone = "stone" }: Props) {
+  const plain = tone === "stone" ? "bg-stone" : "bg-white";
   return (
     <div className="grid items-stretch gap-10 md:grid-cols-[1fr_1.14fr_1fr] md:gap-x-5 md:gap-y-0">
       {items.map((f) => {
@@ -29,7 +29,7 @@ export function FormulaCards({ items, profile, selected, onChoose, tone = "brume
             key={f.id}
             aria-label={`Formule ${f.name}`}
             className={`grid gap-0 p-6 md:row-span-5 md:grid-rows-subgrid md:p-9 ${
-              rec ? "on-dark bg-marine text-white md:-my-6 md:py-14" : plain
+              rec ? "on-dark bg-ink text-white md:-my-6 md:py-14" : plain
             } ${isSel ? "outline outline-4 outline-offset-[-4px] outline-cyan" : ""}`}
           >
             <header className="pb-6">
@@ -52,7 +52,7 @@ export function FormulaCards({ items, profile, selected, onChoose, tone = "brume
                   {isSel ? quote.formulas.chosen : quote.formulas.choose}
                 </button>
               ) : (
-                <Link href={`/devis?profil=${profile}&formule=${f.id}`} className={`btn w-full ${rec ? "btn-cyan" : "btn-primary"}`}>
+                <Link href={`/devis/${profile === "societe" ? "societe" : "particulier"}?formule=${f.id}`} className={`btn w-full ${rec ? "btn-cyan" : "btn-primary"}`}>
                   {quote.formulas.choose}
                 </Link>
               )}

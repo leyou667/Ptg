@@ -15,7 +15,7 @@ export default function Page() {
   return (
     <>
       <PageHero h1={contact.h1} intro={contact.intro} action={{ href: "/devis", label: contact.quote }} />
-      <section data-chapter="light" className="field-brume section">
+      <section data-chapter="light" className="field-stone section">
         <div className="container-x grid12 gap-y-12">
           <div className="col-span-12 grid gap-12 md:col-span-7">
             {links.map((l, i) => (

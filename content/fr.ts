@@ -122,6 +122,7 @@ export const frequencies = [
   "Chaque semaine",
   "Toutes les deux semaines",
   "Chaque mois",
+  "Une seule fois",
 ];
 
 export const quote = {
@@ -411,7 +412,7 @@ export const legal = {
     sections: [
       {
         t: "Données collectées",
-        d: "Via le parcours de devis : nom, téléphone, email, ville, description du lieu et remarque. Nous ne collectons que ce qui est nécessaire pour répondre à votre demande.",
+        d: "Via le questionnaire de devis : nom, prénom, email, téléphone, adresse du lieu, description du besoin et, pour une société, nom de la société, numéro d'entreprise ou de TVA, adresse de facturation et personne de contact. Chaque demande est enregistrée sur le serveur de CheyClean et peut être accompagnée d'un récapitulatif PDF. Nous ne collectons que ce qui est nécessaire pour répondre à votre demande.",
       },
       {
         t: "Finalité et base légale",

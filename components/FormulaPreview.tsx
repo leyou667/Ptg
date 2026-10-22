@@ -9,7 +9,7 @@ const tabs: { id: Profile; label: string }[] = [
   { id: "societe", label: "Sociétés" },
 ];
 
-export function FormulaPreview({ tone = "brume" }: { tone?: "papier" | "brume" }) {
+export function FormulaPreview({ tone = "stone" }: { tone?: "ground" | "stone" }) {
   const [profile, setProfile] = useState<Profile>("particulier");
   return (
     <div>

@@ -1,20 +1,23 @@
 import type { Metadata } from "next";
-import { QuoteFlow } from "@/components/QuoteFlow";
+import { ChoiceTiles } from "@/components/ChoiceTiles";
+import { choice } from "@/content/questionnaire";
 
 export const metadata: Metadata = {
   title: "Demander un devis de nettoyage",
-  description: "Décrivez votre lieu, choisissez une formule et recevez un devis de nettoyage sur mesure. Conseil par assistant IA disponible.",
+  description: "Particulier ou société : choisissez votre profil et décrivez votre besoin pour recevoir un devis de nettoyage sur mesure.",
   alternates: { canonical: "/devis" },
 };
 
-type SP = Promise<{ [k: string]: string | string[] | undefined }>;
-const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
-
-export default async function Page({ searchParams }: { searchParams: SP }) {
-  const sp = await searchParams;
+export default function Page() {
   return (
-    <div id="contenu">
-      <QuoteFlow initial={{ profil: one(sp.profil), formule: one(sp.formule), ville: one(sp.ville) }} />
-    </div>
+    <section id="contenu" data-chapter="light" className="container-x flex min-h-[calc(100svh-4rem)] flex-col justify-between gap-12 pb-10 pt-10 md:pt-16">
+      <div>
+        <h1 className="rise max-w-[14ch]">{choice.title}</h1>
+        <p className="lead rise mt-6" style={{ "--d": "100ms" } as React.CSSProperties}>
+          {choice.sub}
+        </p>
+      </div>
+      <ChoiceTiles animate />
+    </section>
   );
 }

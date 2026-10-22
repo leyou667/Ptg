@@ -21,7 +21,7 @@ type Props = {
 export function Photo({ name, ratio = "4 / 5", position = "50% 50%", className = "", priority, sizes = "(min-width: 768px) 40vw, 100vw" }: Props) {
   const p = lieux[name];
   return (
-    <div className={`relative overflow-hidden bg-brume ${className}`} style={{ aspectRatio: ratio }}>
+    <div className={`relative overflow-hidden bg-stone ${className}`} style={{ aspectRatio: ratio }}>
       <Image src={p.src} alt={p.alt} fill sizes={sizes} priority={priority} loading={priority ? undefined : "lazy"} className="object-cover" style={{ objectPosition: position }} />
     </div>
   );

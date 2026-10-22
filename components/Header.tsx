@@ -33,7 +33,7 @@ export function Header() {
     };
   }, []);
 
-  const bar = dark || open ? (open && !dark ? "bg-papier text-marine" : "bg-marine text-white") : "bg-papier text-marine";
+  const bar = dark || open ? (open && !dark ? "bg-ground text-ink" : "bg-ink text-white") : "bg-ground text-ink";
   const tone = dark && !open ? "dark" : "light";
 
   return (
@@ -54,7 +54,7 @@ export function Header() {
         </nav>
         <button
           type="button"
-          className={`flex h-11 w-11 items-center justify-center rounded-full md:hidden ${tone === "dark" ? "bg-white/15" : "bg-brume"}`}
+          className={`flex h-11 w-11 items-center justify-center rounded-full md:hidden ${tone === "dark" ? "bg-white/15" : "bg-stone"}`}
           aria-expanded={open}
           aria-controls="menu-mobile"
           aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}

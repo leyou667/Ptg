@@ -48,7 +48,7 @@ export function CookieBanner() {
     <>
       {Analytics && <Analytics />}
       {show && (
-        <div role="region" aria-label="Cookies" className="cookie-bar field-marine on-dark">
+        <div role="region" aria-label="Cookies" className="cookie-bar field-ink on-dark">
           <div className="container-x flex flex-col gap-3 py-3 md:flex-row md:items-center md:justify-between">
             <p className="small font-medium">
               {cookies.text}{" "}

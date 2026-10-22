@@ -32,7 +32,7 @@ export default function Page() {
         </div>
       </section>
 
-      <section data-chapter="light" className="field-brume section">
+      <section data-chapter="light" className="field-stone section">
         <div className="container-x">
           <Reveal>
             <h2 className="max-w-[14ch]">{about.commitmentsTitle}</h2>

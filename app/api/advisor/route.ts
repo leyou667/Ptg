@@ -1,4 +1,4 @@
-import { advisorSchema } from "@/lib/schemas";
+import { advisorSchema } from "@/lib/advisor-schema";
 import { FORMULA_MARKER, systemPrompt } from "@/lib/advisor-prompt";
 import { clientIp, rateLimit } from "@/lib/ratelimit";
 

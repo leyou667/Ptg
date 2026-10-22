@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque } from "next/font/google";
+import { Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import { site } from "@/content/fr";
 import { siteUrl } from "@/lib/config";
@@ -10,11 +10,11 @@ import { CookieBanner } from "@/components/CookieBanner";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { SmoothScroll } from "@/components/SmoothScroll";
 
-const bricolage = Bricolage_Grotesque({
+const sans = Instrument_Sans({
   subsets: ["latin", "latin-ext"],
-  variable: "--font-bricolage",
+  variable: "--font-sans-face",
   display: "swap",
-  axes: ["opsz", "wdth"],
+  axes: ["wdth"],
 });
 
 export const metadata: Metadata = {
@@ -34,11 +34,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "./" },
 };
 
-export const viewport: Viewport = { themeColor: "#f8f5f0", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#f7f7f5", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr-BE" className={bricolage.variable} suppressHydrationWarning>
+    <html lang="fr-BE" className={sans.variable} suppressHydrationWarning>
       <body>
         {/* Avant le premier affichage : un visiteur qui a déjà choisi ne voit jamais la barre (pas de décalage de page). */}
         <script dangerouslySetInnerHTML={{ __html: 'try{if(localStorage.getItem("cheyclean-cookies"))document.documentElement.setAttribute("data-cookies","set")}catch(e){}' }} />

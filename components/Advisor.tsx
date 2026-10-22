@@ -103,16 +103,16 @@ export function Advisor({ profile, onClose, onChoose }: { profile: Profile; onCl
   const recName = rec ? formulas[profile].find((f) => f.id === rec)?.name : undefined;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-end justify-center bg-marine/50 md:items-center md:justify-end md:p-6" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+    <div className="fixed inset-0 z-[60] flex items-end justify-center bg-ink/50 md:items-center md:justify-end md:p-6" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div
         ref={dialog}
         role="dialog"
         aria-modal="true"
         aria-labelledby="advisor-title"
         onKeyDown={onKeyDown}
-        className="flex max-h-[92svh] w-full flex-col bg-papier shadow-flotte md:h-[40rem] md:max-w-md"
+        className="flex max-h-[92svh] w-full flex-col bg-ground shadow-flotte md:h-[40rem] md:max-w-md"
       >
-        <div className="flex items-center justify-between gap-3 bg-brume px-5 py-4">
+        <div className="flex items-center justify-between gap-3 bg-stone px-5 py-4">
           <h2 id="advisor-title" className="flex items-center gap-2 text-lg tracking-normal">
             <Star className="h-5 w-5 text-cyan" />
             {advisor.name}
@@ -147,7 +147,7 @@ export function Advisor({ profile, onClose, onChoose }: { profile: Profile; onCl
             </div>
           )}
           {notice && (
-            <p role="alert" className="rounded-[12px] bg-brume p-3 text-[0.95rem]">
+            <p role="alert" className="rounded-[12px] bg-stone p-3 text-[0.95rem]">
               {notice}{" "}
               <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-4">
                 WhatsApp
@@ -157,7 +157,7 @@ export function Advisor({ profile, onClose, onChoose }: { profile: Profile; onCl
         </div>
 
         <form
-          className="bg-brume px-5 py-4"
+          className="bg-stone px-5 py-4"
           onSubmit={(e) => {
             e.preventDefault();
             send();
@@ -197,7 +197,7 @@ export function Advisor({ profile, onClose, onChoose }: { profile: Profile; onCl
 function Bubble({ role, children }: { role: "user" | "assistant"; children: React.ReactNode }) {
   return (
     <div className={`flex ${role === "user" ? "justify-end" : ""}`}>
-      <p className={`max-w-[88%] rounded-[16px] px-4 py-3 text-[0.9875rem] leading-snug ${role === "user" ? "bg-marine text-white" : "bg-white"}`}>{children}</p>
+      <p className={`max-w-[88%] rounded-[16px] px-4 py-3 text-[0.9875rem] leading-snug ${role === "user" ? "bg-ink text-white" : "bg-white"}`}>{children}</p>
     </div>
   );
 }

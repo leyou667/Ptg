@@ -7,7 +7,7 @@ type Step = { t: string; d: string };
 export function Steps({ steps }: { steps: Step[] }) {
   const starts = ["lg:col-start-1 lg:col-span-12", "lg:col-start-3 lg:col-span-10", "lg:col-start-5 lg:col-span-8", "lg:col-start-7 lg:col-span-6"];
   return (
-    <section data-chapter="dark" className="field-marine on-dark section">
+    <section id="contenu" data-chapter="dark" className="field-ink on-dark section scroll-mt-16">
       <div className="container-x">
         <div className="grid12 gap-y-12 md:gap-y-14">
           {steps.map((s, i) => (
