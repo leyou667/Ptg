@@ -60,10 +60,16 @@ export const flow = {
   restoredClear: "Recommencer à zéro",
   sendError: "L'envoi a échoué. Vos réponses sont conservées : réessayez, ou écrivez-nous sur WhatsApp.",
   storageDown: "Le service d'enregistrement est indisponible pour le moment. Vos réponses sont conservées : réessayez plus tard ou écrivez-nous sur WhatsApp.",
+  whatsapp: {
+    send: "Envoyer ma demande sur WhatsApp",
+    note: "WhatsApp s'ouvre avec toutes vos réponses déjà écrites. Appuyez sur Envoyer : votre demande ne nous parvient par WhatsApp qu'à ce moment.",
+    fallback: "Envoyer quand même par WhatsApp",
+    fallbackNote: "Vous pouvez envoyer vos réponses directement sur WhatsApp, elles y sont déjà écrites.",
+  },
   done: {
-    title: "Demande envoyée.",
+    title: "Demande enregistrée.",
     reference: "Votre référence",
-    text: (delai: string) => `Nous vous répondons avec votre devis sous ${delai}.`,
+    text: (delai: string) => `Dernière étape : envoyez-la sur WhatsApp. Nous vous répondons ensuite avec votre devis sous ${delai}.`,
     pdf: "Télécharger le récapitulatif (PDF)",
     pdfNote: "Ce document résume votre demande. Ce n'est ni un devis ni une facture : aucun prix n'est fixé à ce stade.",
     home: "Retour à l'accueil",

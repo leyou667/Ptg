@@ -227,3 +227,28 @@ describe("API /api/requests", () => {
     if (saved.v === undefined) delete process.env.VERCEL;
   });
 });
+
+describe("message WhatsApp prérempli", () => {
+  it("reprend toutes les réponses, la référence, et reste utilisable dans une URL wa.me", async () => {
+    const { buildWhatsappMessage } = await import("@/lib/requests/whatsapp");
+    const { whatsappLink } = await import("@/lib/config");
+    const data = requestSchema.parse(particulier);
+    const msg = buildWhatsappMessage(data, "DEV-2610-ABC234");
+    expect(msg).toContain("DEV-2610-ABC234");
+    expect(msg).toContain(data.email);
+    expect(msg).toContain(`${data.surface} m²`);
+    expect(msg).not.toMatch(/€|\bEUR\b/);
+    const url = whatsappLink(msg);
+    expect(url.startsWith("https://wa.me/")).toBe(true);
+    expect(decodeURIComponent(url.split("?text=")[1])).toBe(msg);
+    expect(url.length).toBeLessThan(4000);
+  });
+  it("tronque les très longs textes mais garde la référence", async () => {
+    const { buildWhatsappMessage } = await import("@/lib/requests/whatsapp");
+    const data = requestSchema.parse({ ...particulier, description: "x".repeat(1500) });
+    const msg = buildWhatsappMessage(data, "DEV-2610-ABC234");
+    expect(msg.length).toBeLessThan(2000);
+    expect(msg).toContain("…");
+    expect(msg).toContain("DEV-2610-ABC234");
+  });
+});

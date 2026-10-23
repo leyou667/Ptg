@@ -7,6 +7,7 @@ import { formulas, site, type FormulaId, type Profile } from "@/content/fr";
 import { errors as msg, flow } from "@/content/questionnaire";
 import { particulierSchema, societeSchema } from "@/lib/requests/schema";
 import { describeRequest, type Group } from "@/lib/requests/describe";
+import { buildWhatsappMessage } from "@/lib/requests/whatsapp";
 import { whatsappLink } from "@/lib/config";
 import { FormulaCards } from "../FormulaCards";
 import { Field } from "./Field";
@@ -35,6 +36,7 @@ export function Questionnaire({ profile, initialFormula }: { profile: Profile; i
   const [errs, setErrs] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   const [done, setDone] = useState<Done | null>(null);
+  const [fallback, setFallback] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
   const [advisor, setAdvisor] = useState(false);
   const [restored, setRestored] = useState(false);
@@ -127,6 +129,12 @@ export function Questionnaire({ profile, initialFormula }: { profile: Profile; i
     return map[title] ?? 0;
   };
 
+  /** Message WhatsApp avec toutes les réponses ; null tant que le formulaire n'est pas valide. */
+  const whatsappFor = (reference?: string) => {
+    const r = check(profile, values);
+    return r.data ? whatsappLink(buildWhatsappMessage(r.data, reference)) : null;
+  };
+
   const send = async () => {
     if (!values.consent) {
       setErrs((e) => ({ ...e, consent: msg.consent }));
@@ -134,6 +142,7 @@ export function Questionnaire({ profile, initialFormula }: { profile: Profile; i
     }
     setStatus("sending");
     setSendError(null);
+    setFallback(false);
     try {
       const res = await fetch("/api/requests", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ profile, ...values }) });
       const body = await res.json().catch(() => ({}));
@@ -154,10 +163,15 @@ export function Questionnaire({ profile, initialFormula }: { profile: Profile; i
         const idx = steps.findIndex((s) => s.fields.some((f) => byField[f.name]));
         if (idx >= 0) setStepIdx(idx);
         setSendError("Une information n'est pas valide. Corrigez le champ signalé.");
-      } else if (res.status === 503) setSendError(flow.storageDown);
-      else if (res.status === 429) setSendError("Trop d'envois depuis cette connexion. Réessayez dans quelques minutes ou écrivez-nous sur WhatsApp.");
-      else setSendError(flow.sendError);
+      } else {
+        // Enregistrement impossible : WhatsApp reste possible, les réponses y sont déjà écrites.
+        setFallback(true);
+        if (res.status === 503) setSendError(flow.storageDown);
+        else if (res.status === 429) setSendError("Trop d'envois depuis cette connexion. Réessayez dans quelques minutes ou envoyez votre demande sur WhatsApp.");
+        else setSendError(flow.sendError);
+      }
     } catch {
+      setFallback(true);
       setSendError(flow.sendError);
     } finally {
       setStatus((s) => (s === "done" ? s : "idle"));
@@ -181,6 +195,7 @@ export function Questionnaire({ profile, initialFormula }: { profile: Profile; i
 
   /* ---------- Confirmation ---------- */
   if (status === "done" && done) {
+    const waDone = whatsappFor(done.reference);
     return (
       <div className="container-x grid12 gap-y-8 pb-24 pt-10 md:pt-16">
         <div className="col-span-12 md:col-span-8">
@@ -197,8 +212,14 @@ export function Questionnaire({ profile, initialFormula }: { profile: Profile; i
             </p>
             {done.emailed && <p className="small soft mt-3">{flow.done.emailed}</p>}
           </div>
+          <div className="mt-8">
+            <a href={waDone ?? whatsappLink()} target="_blank" rel="noopener noreferrer" className="btn btn-primary" data-testid="whatsapp-send">
+              {flow.whatsapp.send}
+            </a>
+            <p className="small soft mt-3 max-w-[52ch]">{flow.whatsapp.note}</p>
+          </div>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href={`/api/requests/${done.reference}/pdf?token=${done.accessToken}`} className="btn btn-primary" download>
+            <a href={`/api/requests/${done.reference}/pdf?token=${done.accessToken}`} className="btn btn-ghost" download>
               {flow.done.pdf}
             </a>
             <Link href="/" className="btn btn-ghost">
@@ -370,6 +391,14 @@ export function Questionnaire({ profile, initialFormula }: { profile: Profile; i
                   <p role="alert" className="erreur mt-6 max-w-xl text-base">
                     {sendError}
                   </p>
+                )}
+                {sendError && fallback && whatsappFor() && (
+                  <div className="mt-4">
+                    <a href={whatsappFor() ?? undefined} target="_blank" rel="noopener noreferrer" className="btn btn-ghost" data-testid="whatsapp-fallback">
+                      {flow.whatsapp.fallback}
+                    </a>
+                    <p className="small soft mt-2 max-w-[52ch]">{flow.whatsapp.fallbackNote}</p>
+                  </div>
                 )}
                 <div className="mt-10 flex flex-wrap gap-3">
                   <button type="button" onClick={() => setStepIdx((i) => i - 1)} className="btn btn-ghost">

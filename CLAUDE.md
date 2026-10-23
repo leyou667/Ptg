@@ -78,3 +78,7 @@ Lighthouse 95+, LCP < 2.5 s, CLS < 0.1; images via `next/image` (WebP/AVIF), sel
 ## Formules (section de tarification)
 
 `components/pricing/` (`FormulaSection` > `PricingSection`, données via `plans.ts` depuis `content/fr.ts`, textes dans `pricingUi`) remplace les cartes sur l'accueil, `/particuliers` et `/societes`. Thème shadcn « Atelier clair » dans `app/globals.css` (`:root` + `@theme inline`), composants `components/ui/*` (écrits à la main, style new-york, `components.json`), Fraunces + Inter chargées seulement par cette section. Cette section suit les consignes explicites de l'utilisateur (cartes blanches, bordure fine, ombre légère) et prime sur les règles de design ci-dessus. `FormulaCards` reste utilisé par le questionnaire et les pages ville.
+
+## Envoi par WhatsApp
+
+Le canal principal de réception est WhatsApp. Fin du questionnaire : `POST /api/requests` enregistre la demande (référence), puis l'écran de confirmation affiche « Envoyer ma demande sur WhatsApp », un lien `wa.me` dont le message contient la référence et TOUTES les réponses (`lib/requests/whatsapp.ts`, même description que le récapitulatif). Le client doit appuyer sur Envoyer dans WhatsApp : ne jamais écrire que la demande a été « envoyée » avant. Si l'enregistrement échoue (503, limitation, réseau), un bouton « Envoyer quand même par WhatsApp » propose le message sans référence. Un envoi automatique sans action du client exigerait l'API WhatsApp Business (compte Meta vérifié, jeton, modèle de message approuvé) : non configuré.
