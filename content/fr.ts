@@ -52,6 +52,9 @@ export const pricingUi = {
   quoteNote: "Prix fixé après échange avec vous",
   rows: { included: "Inclus", frequency: "Fréquence", options: "Options" },
   tableCaption: "Comparatif des formules",
+  regionLabel: "Formules d'abonnement",
+  dotsLabel: "Choisir une formule à afficher",
+  dotAria: (name: string) => `Voir la formule ${name}`,
   noOption: "Aucune",
   buttonAria: (name: string, profile: string) => `Choisir la formule ${name} pour les ${profile.toLowerCase()} et demander un devis`,
 };
