@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Questionnaire } from "@/components/questionnaire/Questionnaire";
 import { flow } from "@/content/questionnaire";
+import { parsePrefill } from "@/lib/qualifier";
 
 export const metadata: Metadata = {
   title: flow.societe.h1,
@@ -16,7 +17,7 @@ export default async function Page({ searchParams }: { searchParams: SP }) {
   const formule = Array.isArray(sp.formule) ? sp.formule[0] : sp.formule;
   return (
     <div id="contenu" data-chapter="light">
-      <Questionnaire profile="societe" initialFormula={formule} />
+      <Questionnaire profile="societe" initialFormula={formule} prefill={parsePrefill("societe", sp)} />
     </div>
   );
 }

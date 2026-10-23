@@ -253,6 +253,13 @@ html.lenis, html.lenis body { height: auto; }
     [data-reveal="hidden"] { opacity: 1; transform: none; }
   }
 
+  /* Assistant « Quelle formule pour moi ? » : entrée douce d'un écran, étoile qui respire pendant le chargement. */
+  .step-in { animation: step-in 360ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .qualifier-pulse { animation: qualifier-pulse 1.6s ease-in-out infinite; filter: drop-shadow(0 0 14px color-mix(in srgb, var(--primary) 60%, transparent)); }
+  @keyframes step-in { from { opacity: 0; transform: translate3d(0, 12px, 0); } to { opacity: 1; transform: none; } }
+  @keyframes qualifier-pulse { 0%, 100% { transform: scale(0.88) rotate(0deg); opacity: 0.7; } 50% { transform: scale(1.1) rotate(10deg); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .step-in, .qualifier-pulse { animation: none; } }
+
   /* ---------- Illustrations animées (Comment ça marche) : transform et opacity seulement ---------- */
   .ill { width: 11rem; height: 11rem; max-width: 100%; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   /* Seuls les éléments animés pivotent autour de leur centre (les attributs transform de placement restent intacts). */

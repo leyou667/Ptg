@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { ChoiceTiles } from "@/components/ChoiceTiles";
+import { Qualifier } from "@/components/qualifier/Qualifier";
 import { Intro } from "@/components/Intro";
 import { FormulaSection } from "@/components/pricing/FormulaSection";
 import { Faq } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { Reveal } from "@/components/Reveal";
 import { Steps } from "@/components/Steps";
-import { faq, home, site } from "@/content/fr";
-import { choice } from "@/content/questionnaire";
+import { faq, home, qualifierUi, site } from "@/content/fr";
 import { faqSchema, localBusiness } from "@/lib/schema-org";
 
 export const metadata: Metadata = {
@@ -38,14 +37,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section data-chapter="dark" className="field-ink on-dark section">
+      <section id="quelle-formule" data-chapter="dark" className="field-ink on-dark section scroll-mt-16">
         <div className="container-x">
           <Reveal>
-            <h2 className="max-w-[14ch]">{choice.title}</h2>
+            <h2 className="max-w-[18ch]">{qualifierUi.title}</h2>
           </Reveal>
-          <Reveal delay={90}>
-            <ChoiceTiles className="mt-12" onDark />
+          <Reveal delay={60}>
+            <p className="lead mt-5">{qualifierUi.tagline}</p>
           </Reveal>
+          <div className="mt-10 md:mt-14">
+            <Qualifier />
+          </div>
         </div>
       </section>
 

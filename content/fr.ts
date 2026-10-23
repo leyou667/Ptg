@@ -249,6 +249,73 @@ export const assistantUi = {
   error: "Un problème est survenu. Réessayez dans un instant ou écrivez-nous sur WhatsApp.",
 };
 
+/** Assistant « Quelle formule pour moi ? » : questions, réponses et textes de repli (sans IA). Aucun prix. */
+export const qualifierUi = {
+  title: "Quelle formule pour moi ?",
+  tagline: "Trois questions, une recommandation, puis votre devis prérempli.",
+  profileQuestion: "Pour qui est ce nettoyage ?",
+  profiles: {
+    particulier: { word: "PARTICULIER", text: "Appartement, maison, villa", aria: "Je suis un particulier" },
+    societe: { word: "SOCIÉTÉ", text: "Bureaux, commerces, écoles, salles de sport", aria: "Je représente une société" },
+  } as Record<Profile, { word: string; text: string; aria: string }>,
+  questions: {
+    particulier: { lieu: "Quel type de logement ?", surface: "Quelle surface environ ?", frequence: "À quelle fréquence ?" },
+    societe: { lieu: "Quel type de lieu ?", surface: "Quelle surface environ ?", frequence: "À quelle fréquence ?" },
+  } as Record<Profile, { lieu: string; surface: string; frequence: string }>,
+  progress: (n: number, total: number) => `Question ${n} sur ${total}`,
+  back: "Retour",
+  change: "Changer de profil",
+  loading: "Je prépare votre recommandation…",
+  resultTitle: "Notre conseil pour vous",
+  recommended: "Formule recommandée",
+  cta: "Demander mon devis",
+  ctaNote: "Votre devis sera prérempli avec ces réponses.",
+  restart: "Refaire le parcours",
+  seeFormulas: "Voir toutes les formules",
+  sourceAi: "Conseil rédigé par notre assistant",
+  sourceRules: "Conseil établi d'après vos réponses",
+  summaryLabel: "Vos réponses",
+};
+
+/** Types de lieu proposés (les libellés sont ceux du formulaire de devis) et la façon d'en parler. */
+export const qualifierPlaces: Record<Profile, { label: string; phrase: string }[]> = {
+  particulier: [
+    { label: "Appartement", phrase: "votre appartement" },
+    { label: "Maison", phrase: "votre maison" },
+    { label: "Villa", phrase: "votre villa" },
+  ],
+  societe: [
+    { label: "Bureaux", phrase: "vos bureaux" },
+    { label: "Commerce", phrase: "votre commerce" },
+    { label: "École", phrase: "votre école" },
+    { label: "Salle de sport", phrase: "votre salle de sport" },
+  ],
+};
+
+/** Tranches de surface : « value » préremplit le champ (surface approximative, modifiable dans le devis). */
+export const qualifierSurfaces: Record<Profile, { id: string; label: string; value: number; score: 0 | 1 | 2 }[]> = {
+  particulier: [
+    { id: "s1", label: "Moins de 60 m²", value: 45, score: 0 },
+    { id: "s2", label: "60 à 120 m²", value: 90, score: 1 },
+    { id: "s3", label: "120 à 250 m²", value: 180, score: 2 },
+    { id: "s4", label: "Plus de 250 m²", value: 300, score: 2 },
+  ],
+  societe: [
+    { id: "s1", label: "Moins de 100 m²", value: 70, score: 0 },
+    { id: "s2", label: "100 à 300 m²", value: 200, score: 1 },
+    { id: "s3", label: "300 à 1 000 m²", value: 600, score: 2 },
+    { id: "s4", label: "Plus de 1 000 m²", value: 1200, score: 2 },
+  ],
+};
+
+/** Conseils de repli, sans IA. {lieu} devient « votre appartement », « vos bureaux », etc. Aucun prix, jamais. */
+export const qualifierFallback: Record<FormulaId, string> = {
+  essentiel: "Pour {lieu}, la formule Essentiel garde l'ensemble net sans que vous ayez à y penser. Une équipe régulière s'en occupe aux jours convenus. Demandez votre devis gratuit : le prix est fixé après échange avec vous.",
+  confort: "Pour {lieu}, la formule Confort offre le bon équilibre entre entretien complet et régularité. Une équipe attitrée intervient aux jours fixes qui vous conviennent. Demandez votre devis gratuit : le prix est fixé après échange avec vous.",
+  pro: "Pour {lieu}, la formule Pro assure un entretien complet pour des équipes qui travaillent au quotidien. L'intervention se règle sur vos horaires. Demandez votre devis gratuit : le prix est fixé après échange avec vous.",
+  premium: "Pour {lieu}, la formule Premium apporte le niveau d'exigence le plus élevé, avec un suivi attentif et des interventions fréquentes. Elle se règle sur vos contraintes. Demandez votre devis gratuit : le prix est fixé après échange avec vous.",
+};
+
 export const home = {
   statement: "CheyClean, société de nettoyage en abonnement partout en Belgique.",
   steps: [

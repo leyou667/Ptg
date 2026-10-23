@@ -8,6 +8,7 @@ import { errors as msg, flow } from "@/content/questionnaire";
 import { particulierSchema, societeSchema } from "@/lib/requests/schema";
 import { describeRequest, type Group } from "@/lib/requests/describe";
 import { buildWhatsappMessage } from "@/lib/requests/whatsapp";
+import type { Prefill } from "@/lib/qualifier";
 import { whatsappLink } from "@/lib/config";
 import { FormulaCards } from "../FormulaCards";
 import { Field } from "./Field";
@@ -28,10 +29,10 @@ function check(profile: Profile, values: Values) {
   return { byField, data: r.success ? r.data : null };
 }
 
-export function Questionnaire({ profile, initialFormula }: { profile: Profile; initialFormula?: string }) {
+export function Questionnaire({ profile, initialFormula, prefill }: { profile: Profile; initialFormula?: string; prefill?: Prefill }) {
   const steps = useMemo(() => stepsFor(profile), [profile]);
   const startFormula = (["essentiel", "confort", "pro", "premium"] as const).find((f) => f === initialFormula && formulas[profile].some((x) => x.id === f));
-  const [values, setValues] = useState<Values>(() => initialValues(profile, startFormula));
+  const [values, setValues] = useState<Values>(() => initialValues(profile, startFormula, prefill));
   const [stepIdx, setStepIdx] = useState(0);
   const [errs, setErrs] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
@@ -56,7 +57,16 @@ export function Questionnaire({ profile, initialFormula }: { profile: Profile; i
         const base = initialValues(profile);
         const keys = Object.keys(base);
         if (d?.values && keys.every((k) => k in d.values)) {
-          setValues({ ...d.values, consent: false, website: "", ...(startFormula ? { formula: startFormula } : {}) });
+          setValues({
+            ...d.values,
+            consent: false,
+            website: "",
+            ...(startFormula ? { formula: startFormula } : {}),
+            // Les réponses du parcours « Quelle formule pour moi ? » priment sur un ancien brouillon.
+            ...(prefill?.placeType ? { placeType: prefill.placeType } : {}),
+            ...(prefill?.surface ? { surface: prefill.surface } : {}),
+            ...(prefill?.frequency ? { frequency: prefill.frequency, nature: prefill.nature ?? d.values.nature } : {}),
+          });
           setStepIdx(Math.min(Math.max(0, d.step | 0), steps.length - 1));
           setRestored(Object.entries(d.values).some(([k, v]) => k !== "consent" && k !== "website" && k !== "billingCountry" && k !== "siteSameAsBilling" && k !== "formula" && v !== "" && v !== false));
         }
@@ -65,6 +75,7 @@ export function Questionnaire({ profile, initialFormula }: { profile: Profile; i
       /* stockage indisponible : le formulaire fonctionne sans brouillon */
     }
     loaded.current = true;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, steps.length, startFormula]);
   /* eslint-enable react-hooks/set-state-in-effect */
 

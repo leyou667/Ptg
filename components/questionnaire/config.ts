@@ -99,8 +99,8 @@ export function stepsFor(profile: Profile): StepDef[] {
   ];
 }
 
-export function initialValues(profile: Profile, formula?: string): Values {
-  const common: Values = { surface: "", frequency: "", nature: "", placeType: "", description: "", formula: formula ?? "undecided", consent: false, website: "" };
+export function initialValues(profile: Profile, formula?: string, prefill?: { placeType?: string; surface?: string; frequency?: string; nature?: string }): Values {
+  const common: Values = { surface: prefill?.surface ?? "", frequency: prefill?.frequency ?? "", nature: prefill?.nature ?? "", placeType: prefill?.placeType ?? "", description: "", formula: formula ?? "undecided", consent: false, website: "" };
   if (profile === "particulier") return { ...common, firstName: "", lastName: "", email: "", phone: "", street: "", postalCode: "", city: "" };
   return {
     ...common,
