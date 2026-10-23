@@ -274,6 +274,8 @@ export function Intro() {
         <canvas ref={canvas} className="absolute inset-0 h-full w-full" role="img" aria-label={intro.posterAlt} />
         {/* Voile sous le texte posé sur l'image */}
         <div aria-hidden className="absolute inset-0 bg-background/25" />
+        {/* Voile froid : accorde les photos chaudes au bleu nuit de l'interface. */}
+        <div aria-hidden className="absolute inset-0 bg-glow-deep/30" />
         {/* taste-skill-ignore : voile sous le texte posé sur l'image, seule exception admise aux dégradés */}
         <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" /> {/* taste-skill-ignore */}
 
@@ -283,14 +285,14 @@ export function Intro() {
 
         <div className="container-x intro-copy absolute inset-x-0 bottom-0 pb-24 md:pb-16">
           <p className="intro-srlist sr-only">{intro.lines.slice(1, 4).join(" ")}</p>
-          <ol className="relative min-h-[6.5rem] md:min-h-[9rem]">
+          <ol className="relative min-h-[5.5rem] md:min-h-[10rem]">
             {PHRASES.map((text, i) => (
               <li
                 key={text}
                 ref={(el) => {
                   lines.current[i] = el;
                 }}
-                className="intro-line absolute inset-x-0 bottom-0 max-w-none text-[1.75rem] font-semibold leading-[1.05] tracking-tight text-foreground sm:max-w-[22ch] sm:text-5xl md:max-w-[26ch] md:text-6xl"
+                className="intro-line absolute inset-x-0 bottom-0 max-w-none font-display text-[2.5rem] font-semibold leading-[1.02] tracking-[-0.02em] text-foreground sm:max-w-[20ch] sm:text-6xl md:max-w-[22ch] md:text-7xl lg:text-[5.5rem]"
                 style={i === 0 ? undefined : { opacity: 0, visibility: "hidden" }}
               >
                 {i === 0 ? (
@@ -304,12 +306,13 @@ export function Intro() {
               </li>
             ))}
           </ol>
-          <div className="relative mt-5 min-h-[8.5rem]">
+          <div className="relative mt-5 min-h-[11rem]">
             <div ref={(el) => { subs.current[0] = el; }} className="intro-sub absolute inset-x-0 top-0">
               <p className="max-w-[30ch] text-xl leading-snug text-foreground/90">{home.statement}</p>
-              <button type="button" onClick={skip} className="btn btn-cyan mt-5 text-base">
+              <button type="button" onClick={skip} className="btn btn-primary mt-5 min-h-14 px-8 text-lg">
                 {intro.cta}
               </button>
+              <p className="mt-4 max-w-[40ch] text-[0.9375rem] text-muted-foreground">{home.reassurance}</p>
             </div>
           </div>
         </div>
@@ -331,7 +334,7 @@ export function Intro() {
         <div ref={hint} className="intro-hint absolute left-5 top-[5.5rem] text-sm font-medium text-foreground/90 md:left-auto md:right-16" aria-hidden>
           {intro.scrollHint}
         </div>
-        <button ref={skipEl} type="button" onClick={skip} className="intro-skip btn absolute right-10 top-[5.5rem] min-h-11 bg-background/60 px-5 py-2 text-[0.9375rem] text-foreground hover:bg-foreground hover:text-background md:bottom-8 md:right-16 md:top-auto">
+        <button ref={skipEl} type="button" onClick={skip} className="intro-skip btn absolute right-10 top-[5.5rem] min-h-11 bg-background/60 px-5 py-2 text-[0.9375rem] text-foreground hover:bg-foreground hover:text-background md:bottom-8 md:right-28 md:top-auto">
           {intro.skip}
         </button>
       </div>

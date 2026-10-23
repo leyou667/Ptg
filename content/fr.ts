@@ -22,6 +22,8 @@ export const site = {
   whatsappGreeting: "Bonjour CheyClean, je souhaite un devis.",
 };
 
+export const headerUi = { quickCta: "Devis", quickCtaAria: "Demander mon devis" };
+
 export const nav = [
   { href: "/particuliers", label: "Particuliers" },
   { href: "/societes", label: "Sociétés" },
@@ -53,6 +55,8 @@ export const pricingUi = {
   rows: { included: "Inclus", frequency: "Fréquence", options: "Options" },
   tableCaption: "Comparatif des formules",
   regionLabel: "Formules d'abonnement",
+  sharedNote: "Prix fixé après échange avec vous",
+  frequencyLabel: "Fréquence",
   dotsLabel: "Choisir une formule à afficher",
   dotAria: (name: string) => `Voir la formule ${name}`,
   noOption: "Aucune",
@@ -254,6 +258,7 @@ export const home = {
     { t: "Puis nous intervenons à jours fixes.", d: "Une équipe attitrée, aux horaires convenus, en toute discrétion." },
   ],
   stepsCta: "Demander un devis",
+  reassurance: "Sur mesure · Prix fixé après échange · Partout en Belgique",
   stepIllustrations: [
     "Illustration : une pièce arrondie avec ses mesures en largeur et en hauteur, et une épingle qui marque votre lieu.",
     "Illustration : trois cartes de formules, celle du milieu se soulève et se coche, avec des étincelles.",

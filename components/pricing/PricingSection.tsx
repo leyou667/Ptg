@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Check } from "lucide-react";
 import { pricingUi, type Profile } from "@/content/fr";
 import { cn } from "@/lib/utils";
+import { Star } from "../Star";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -41,18 +42,28 @@ function PlanCard({ plan, profile, index }: { plan: PricingPlan; profile: Profil
       )}
     >
       {rec && (
-        <span className="absolute left-5 top-0 -translate-y-1/2 md:left-7 rounded-full bg-primary px-4 py-1 text-[14px] font-semibold text-primary-foreground">
+        <span className="absolute left-5 top-0 -translate-y-1/2 md:left-7 rounded-full bg-champagne px-4 py-1 text-[14px] font-semibold text-background">
           {pricingUi.recommended}
         </span>
       )}
       <CardHeader className="gap-1.5 px-5 pt-6 md:gap-2 md:px-7 md:pt-8">
-        <h3 className={cn(heading, "text-[28px] leading-tight tracking-normal")}>{plan.name}</h3>
+        <h3 className={cn(heading, "flex items-center gap-2 text-[28px] leading-tight tracking-normal")}>
+          {plan.name}
+          {rec && <Star className="h-5 w-5 text-champagne" />}
+        </h3>
         <p className="text-[16px] leading-snug text-muted-foreground md:text-[17px] md:leading-normal">{plan.tagline}</p>
-        <div className="mt-2 md:mt-4">
-          <p className={cn(heading, "text-[28px] leading-none tracking-normal md:text-[34px]")}>{pricingUi.quoteOnly}</p>
+        <div className="mt-2 md:hidden">
+          <p className={cn(heading, "text-[28px] leading-none tracking-normal")}>{pricingUi.quoteOnly}</p>
           <p className="mt-1.5 text-[15px] leading-snug text-muted-foreground md:mt-2">{pricingUi.quoteNote}</p>
         </div>
       </CardHeader>
+      {/* Ordinateur : l'essentiel en trois points ; le détail complet est dans le tableau comparatif. */}
+      <CardContent className="mt-5 hidden gap-3 px-7 text-[16px] leading-snug md:grid [&_ul]:gap-2">
+        <Items items={plan.included.slice(0, 3)} />
+        <p className="text-muted-foreground">
+          {pricingUi.frequencyLabel} : {plan.frequency}
+        </p>
+      </CardContent>
       <CardContent className="mt-4 grid gap-3 px-5 text-[15px] leading-snug md:hidden [&_ul]:gap-1">
         <div>
           <p className="mb-1 text-[15px] font-semibold text-muted-foreground">{pricingUi.rows.included}</p>
@@ -170,6 +181,7 @@ export function PricingSection({ defaultProfile = "particulier" }: { defaultProf
 
   return (
     <div>
+      <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3">
       <ToggleGroup
         type="single"
         value={profile}
@@ -182,6 +194,11 @@ export function PricingSection({ defaultProfile = "particulier" }: { defaultProf
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
+      <p className="hidden items-baseline gap-3 md:flex">
+        <span className="font-display text-[1.75rem] font-semibold leading-none">{pricingUi.quoteOnly}</span>
+        <span className="text-[16px] text-muted-foreground">{pricingUi.sharedNote}</span>
+      </p>
+      </div>
       {/* Mobile : carrousel natif (flex + défilement horizontal + snap). md et plus : grille de 3 colonnes. */}
       <div
         ref={scroller}
@@ -201,7 +218,7 @@ export function PricingSection({ defaultProfile = "particulier" }: { defaultProf
             aria-label={pricingUi.dotAria(p.name)}
             aria-current={active === i ? "true" : undefined}
             onClick={() => center(i, true)}
-            className="grid h-11 w-9 place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="grid h-11 w-11 place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <span className={cn("block h-2 rounded-full transition-all duration-300 motion-reduce:transition-none", active === i ? "w-6 bg-primary" : "w-2 bg-border-strong")} />
           </button>

@@ -10,13 +10,13 @@ export function ChoiceTiles({ onDark = false, className = "", animate = false }:
   return (
     <div className={`grid gap-3 md:grid-cols-2 md:gap-5 ${className}`} data-ondark={onDark || undefined}>
       <Link href="/devis/particulier" aria-label={choice.particulier.aria} className={`${tile} ${animate ? "rise" : ""}`} style={animate ? ({ "--d": "180ms" } as React.CSSProperties) : undefined}>
-        <span className="font-bold leading-none tracking-tight" style={{ fontSize: "clamp(2rem, 5.2vw, 4.75rem)", letterSpacing: "-0.04em" }}>
+        <span className="font-display font-semibold leading-none" style={{ fontSize: "clamp(2rem, 5.2vw, 4.5rem)", letterSpacing: "-0.02em" }}>
           {choice.particulier.word}
         </span>
         <span className="text-[1.125rem] md:text-[1.25rem]">{choice.particulier.text}</span>
       </Link>
       <Link href="/devis/societe" aria-label={choice.societe.aria} className={`${tile} ${animate ? "rise" : ""}`} style={animate ? ({ "--d": "280ms" } as React.CSSProperties) : undefined}>
-        <span className="font-bold leading-none tracking-tight" style={{ fontSize: "clamp(2rem, 5.2vw, 4.75rem)", letterSpacing: "-0.04em" }}>
+        <span className="font-display font-semibold leading-none" style={{ fontSize: "clamp(2rem, 5.2vw, 4.5rem)", letterSpacing: "-0.02em" }}>
           {choice.societe.word}
         </span>
         <span className="text-[1.125rem] md:text-[1.25rem]">{choice.societe.text}</span>

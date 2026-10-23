@@ -1,12 +1,16 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { Star } from "./Star";
 
 /** L'étoile du logo descend le long d'un fin trait vertical au fil du défilement. */
 export function ScrollProgress() {
   const star = useRef<HTMLDivElement>(null);
+  // L'accueil a déjà sa propre ligne de temps (Comment ça marche) : une seule ligne à l'écran.
+  const off = usePathname() === "/";
   useEffect(() => {
+    if (off) return;
     let raf = 0;
     const update = () => {
       raf = 0;
@@ -25,8 +29,9 @@ export function ScrollProgress() {
       window.removeEventListener("resize", onScroll);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [off]);
 
+  if (off) return null;
   return (
     <div aria-hidden className="pointer-events-none fixed right-0.5 top-16 bottom-24 z-30 w-4 md:w-5">
       <div className="absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 rounded-full bg-primary/30" />

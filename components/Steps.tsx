@@ -83,7 +83,7 @@ export function Steps({ steps }: { steps: Step[] }) {
   return (
     <section id="contenu" data-chapter="dark" className="field-ink on-dark section scroll-mt-16">
       <div className="container-x">
-        <ol ref={list} className="relative mx-auto max-w-5xl pl-14 md:pl-24">
+        <ol ref={list} className="relative mx-auto max-w-6xl pl-14 md:pl-24">
           <div ref={spark} aria-hidden className="pointer-events-none absolute left-5 top-0 z-20 -ml-[0.5rem] -mt-[0.5rem] w-4 opacity-0 transition-opacity duration-300 md:left-7 md:-ml-[0.625rem] md:w-5">
             <Star className="h-4 w-4 text-primary drop-shadow-[0_0_8px_var(--primary)] md:h-5 md:w-5" />
           </div>
@@ -98,7 +98,7 @@ export function Steps({ steps }: { steps: Step[] }) {
                 <span aria-hidden className="absolute left-[-2.25rem] top-5 -bottom-5 w-[3px] -translate-x-1/2 rounded-full bg-primary/20 md:left-[-4.25rem] md:top-7 md:-bottom-7">
                   <span data-seg className="absolute inset-0 origin-top rounded-full bg-primary" style={{ transform: "scaleY(1)" }} />
                 </span>
-                <div className="grid gap-6 transition-opacity duration-500 group-data-[state=idle]/step:opacity-45 md:grid-cols-[1fr_auto] md:items-center md:gap-12 motion-reduce:transition-none">
+                <div className="grid gap-6 transition-colors duration-500 group-data-[state=idle]/step:text-idle md:grid-cols-[minmax(0,1fr)_16rem] md:items-center md:gap-12 motion-reduce:transition-none">
                   <div>
                     <p className="sr-only">{`Étape ${i + 1} sur ${total}`}</p>
                     {i === 0 ? (
@@ -108,9 +108,9 @@ export function Steps({ steps }: { steps: Step[] }) {
                         {s.t}
                       </p>
                     )}
-                    <p className="mt-4 max-w-[34ch] text-[1.0625rem] text-foreground/85 md:text-[1.125rem]">{s.d}</p>
+                    <p className="mt-4 max-w-[36ch] text-[1.0625rem] md:text-[1.125rem]">{s.d}</p>
                   </div>
-                  <Illustration label={home.stepIllustrations[i]} className="md:h-52 md:w-52">
+                  <Illustration label={home.stepIllustrations[i]} className="transition-opacity duration-500 group-data-[state=idle]/step:opacity-60 md:h-64 md:w-64 md:justify-self-end">
                     <Scene />
                   </Illustration>
                 </div>
@@ -125,7 +125,7 @@ export function Steps({ steps }: { steps: Step[] }) {
             >
               <Star className="h-5 w-5 md:h-7 md:w-7" />
             </span>
-            <div className="flex min-h-10 items-center transition-opacity duration-500 group-data-[state=idle]/step:opacity-45 md:min-h-14">
+            <div className="flex min-h-10 items-center md:min-h-14">
               <Link href="/devis" className="btn btn-primary">
                 {home.stepsCta}
               </Link>

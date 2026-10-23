@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { nav } from "@/content/fr";
+import { headerUi, nav } from "@/content/fr";
 import { Logo } from "./Logo";
 
 /** Barre simple : le nom, quelques liens, une action. Un seul style sur toute la page : verre sombre. */
@@ -12,7 +12,7 @@ export function Header() {
   return (
     <header className="glass sticky top-0 z-40 rounded-none border-x-0 border-t-0 bg-background/85 text-foreground">
       <div className="container-x flex h-16 items-center justify-between gap-4">
-        <Link href="/" aria-label="CheyClean, accueil" className="shrink-0" onClick={() => setOpen(false)}>
+        <Link href="/" aria-label="CheyClean, accueil" className="inline-flex min-h-11 shrink-0 items-center" onClick={() => setOpen(false)}>
           <Logo dark className="h-9 w-auto" />
         </Link>
         <nav aria-label="Navigation principale" className="hidden items-center gap-2 md:flex">
@@ -25,9 +25,13 @@ export function Header() {
             Demander mon devis
           </Link>
         </nav>
+        <div className="flex items-center gap-2 md:hidden">
+          <Link href="/devis" aria-label={headerUi.quickCtaAria} className="btn btn-primary min-h-11 px-5 py-2 text-[0.9375rem]">
+            {headerUi.quickCta}
+          </Link>
         <button
           type="button"
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-card md:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-card"
           aria-expanded={open}
           aria-controls="menu-mobile"
           aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
@@ -39,6 +43,7 @@ export function Header() {
             <span className={`absolute left-0 h-0.5 w-5 bg-current transition-transform duration-300 ${open ? "top-1/2 -rotate-45" : "bottom-0"}`} />
           </span>
         </button>
+        </div>
       </div>
       {open && (
         <nav id="menu-mobile" aria-label="Navigation mobile" className="md:hidden">

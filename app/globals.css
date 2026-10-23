@@ -13,7 +13,7 @@
   --accent: #1e8fc0;
   --card: rgb(255 255 255 / 0.06);
   --card-foreground: #f4f8fb;
-  --border: rgb(255 255 255 / 0.12);
+  --border: rgb(255 255 255 / 0.16);
   --ring: #7fd3ec;
 
   /* Lueurs du fond animé */
@@ -22,12 +22,16 @@
   --glow-light: #7fd3ec;
   --glow-core: #b8ecf7;
 
+  /* Accents d'interface : étapes non atteintes (au lieu d'une opacité qui faisait chuter le contraste) et touche chaude, très rare. */
+  --idle: #8fa3b5;
+  --champagne: #e8cc94;
+
   /* Dérivées de la palette (jamais une nouvelle couleur) */
   --muted: rgb(255 255 255 / 0.08);
   --border-strong: rgb(255 255 255 / 0.35);
   --destructive: #ff9ea3;
   --primary-hover: color-mix(in srgb, var(--primary) 82%, var(--foreground));
-  --veil: color-mix(in srgb, var(--background) 62%, transparent);
+  --veil: color-mix(in srgb, var(--background) 78%, transparent);
   --glass-blur: 18px;
 
   /* Variables lues par les classes partagées (.btn, .panel, .champ, .field-*). L'administration les redéfinit en clair. */
@@ -49,7 +53,7 @@
   --u-ghost-hover-fg: var(--foreground);
   --u-field-bg: rgb(255 255 255 / 0.08);
   --u-field-fg: var(--foreground);
-  --u-field-border: var(--border);
+  --u-field-border: rgb(255 255 255 / 0.38);
   --u-field-focus: var(--primary);
   --u-placeholder: var(--muted-foreground);
   --u-error: var(--destructive);
@@ -74,6 +78,8 @@
   --color-ring: var(--ring);
   --color-destructive: var(--destructive);
   --color-glow-deep: var(--glow-deep);
+  --color-idle: var(--idle);
+  --color-champagne: var(--champagne);
   --color-glow-mid: var(--glow-mid);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
@@ -192,6 +198,9 @@ html.lenis, html.lenis body { height: auto; }
   .btn:active { transform: translate3d(0, 1px, 0); }
   .btn-primary, .btn-cyan { background: var(--u-btn); color: var(--u-btn-fg); }
   .btn-primary:hover, .btn-cyan:hover { background: var(--u-btn-hover); }
+  /* Éclat discret au survol : couleur de la palette, jamais de néon. */
+  .btn-primary:hover, .btn-cyan:hover { box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 22%, transparent), 0 10px 30px -10px color-mix(in srgb, var(--primary) 60%, transparent); }
+  [data-admin] .btn-primary:hover, [data-admin] .btn-cyan:hover { box-shadow: none; }
   .btn-ghost { background: var(--u-ghost-bg); color: var(--u-ghost-fg); border: 2px solid var(--u-ghost-border); }
   .btn-ghost:hover { background: var(--u-ghost-hover-bg); color: var(--u-ghost-hover-fg); }
   .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
@@ -217,7 +226,7 @@ html.lenis, html.lenis body { height: auto; }
   .erreur { color: var(--u-error); font-size: 0.9375rem; margin-top: 0.4rem; }
 
   /* Liens en gros textes */
-  .big-link { display: block; transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .big-link { display: block; min-height: 2.75rem; transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); }
   .big-link:hover { transform: translate3d(0.6rem, 0, 0); }
 
   html[data-cookies="set"] .cookie-bar { display: none; }
