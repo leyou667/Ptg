@@ -225,6 +225,26 @@ export const advisor = {
   limit: "Cette conversation a atteint sa limite. Continuez avec le formulaire ou écrivez-nous sur WhatsApp.",
 };
 
+export const assistantUi = {
+  open: "Ouvrir l'assistant de devis",
+  title: "Assistant de devis",
+  dialogLabel: "Assistant de devis CheyClean",
+  close: "Fermer l'assistant",
+  reset: "Nouvelle conversation",
+  welcome: "Bonjour, décrivez-moi votre lieu (type, surface, ville) et je vous conseille la bonne formule.",
+  suggestions: ["J'ai un appartement", "J'ai des bureaux", "Comment fonctionne l'abonnement ?"],
+  placeholder: "Votre message",
+  inputLabel: "Votre message à l'assistant",
+  send: "Envoyer",
+  typing: "L'assistant écrit…",
+  whatsapp: "Parler à quelqu'un sur WhatsApp",
+  quoteCta: "Envoyer ma demande de devis",
+  privacy: "Votre conversation reste dans cet onglet. CheyClean ne l'enregistre pas. Aucun prix n'est donné : il est fixé dans le devis.",
+  unavailable: "L'assistant est indisponible pour le moment. Vous pouvez demander un devis directement ou nous écrire sur WhatsApp.",
+  limit: "Cette conversation a atteint sa limite. Demandez un devis ou écrivez-nous sur WhatsApp.",
+  error: "Un problème est survenu. Réessayez dans un instant ou écrivez-nous sur WhatsApp.",
+};
+
 export const home = {
   statement: "CheyClean, société de nettoyage en abonnement partout en Belgique.",
   steps: [

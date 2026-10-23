@@ -1,6 +1,6 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { WhatsAppFab } from "@/components/WhatsAppFab";
+import { ChatLauncher } from "@/components/chat/ChatLauncher";
 import { CookieBanner } from "@/components/CookieBanner";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { SmoothScroll } from "@/components/SmoothScroll";
@@ -21,7 +21,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <SmoothScroll />
       <main>{children}</main>
       <Footer />
-      <WhatsAppFab />
+      <ChatLauncher />
     </>
   );
 }
