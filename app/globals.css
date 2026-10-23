@@ -1,16 +1,64 @@
 @import "tailwindcss";
 
-@theme {
-  --color-ink: #0b1f3f;
-  --color-ink-soft: #46546b;
-  --color-cyan: #12c4dc;
-  --color-ground: #eaf5f8;
-  --color-stone: #d3e8ee;
-  --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
-  --shadow-flotte: 0 22px 44px -16px rgb(11 31 63 / 0.38);
+/* ------------------------------------------------------------------------------------------------
+   Palette « Nuit lumineuse » : définie UNE fois ici. Aucun composant public ne code une couleur en dur.
+   ------------------------------------------------------------------------------------------------ */
+:root {
+  color-scheme: dark;
+  --background: #02060f;
+  --foreground: #f4f8fb;
+  --muted-foreground: #a9bccb;
+  --primary: #7fd3ec;
+  --primary-foreground: #02060f;
+  --accent: #1e8fc0;
+  --card: rgb(255 255 255 / 0.06);
+  --card-foreground: #f4f8fb;
+  --border: rgb(255 255 255 / 0.12);
+  --ring: #7fd3ec;
+
+  /* Lueurs du fond animé */
+  --glow-deep: #0a4a7a;
+  --glow-mid: #1e8fc0;
+  --glow-light: #7fd3ec;
+  --glow-core: #b8ecf7;
+
+  /* Dérivées de la palette (jamais une nouvelle couleur) */
+  --muted: rgb(255 255 255 / 0.08);
+  --border-strong: rgb(255 255 255 / 0.35);
+  --destructive: #ff9ea3;
+  --primary-hover: color-mix(in srgb, var(--primary) 82%, var(--foreground));
+  --veil: color-mix(in srgb, var(--background) 62%, transparent);
+  --glass-blur: 18px;
+
+  /* Variables lues par les classes partagées (.btn, .panel, .champ, .field-*). L'administration les redéfinit en clair. */
+  --u-text: var(--foreground);
+  --u-soft: var(--muted-foreground);
+  --u-soft-on-veil: var(--muted-foreground);
+  --u-surface: var(--card);
+  --u-veil: var(--veil);
+  --u-blur: var(--glass-blur);
+  --u-panel-radius: 20px;
+  --u-panel-border: var(--border);
+  --u-btn: var(--primary);
+  --u-btn-fg: var(--primary-foreground);
+  --u-btn-hover: var(--primary-hover);
+  --u-ghost-bg: transparent;
+  --u-ghost-fg: var(--foreground);
+  --u-ghost-border: var(--border-strong);
+  --u-ghost-hover-bg: rgb(255 255 255 / 0.1);
+  --u-ghost-hover-fg: var(--foreground);
+  --u-field-bg: rgb(255 255 255 / 0.08);
+  --u-field-fg: var(--foreground);
+  --u-field-border: var(--border);
+  --u-field-focus: var(--primary);
+  --u-placeholder: var(--muted-foreground);
+  --u-error: var(--destructive);
+  --u-focus: var(--ring);
+  --u-focus-on-dark: var(--ring);
+  --u-selection-bg: var(--primary);
+  --u-selection-fg: var(--primary-foreground);
 }
 
-/* Thème shadcn « Atelier clair » : utilisé par components/ui et par la section des formules. */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -18,25 +66,60 @@
   --color-card-foreground: var(--card-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --shadow-flotte: 0 22px 44px -16px rgb(0 0 0 / 0.6);
 }
 
-:root {
-  color-scheme: light;
-  --background: #faf8f4;
-  --foreground: #14233a;
-  --card: #ffffff;
-  --card-foreground: #14233a;
-  --primary: #2f7f86;
-  --primary-foreground: #ffffff;
-  --muted: #e8dfd0;
-  --muted-foreground: #566173;
-  --border: #e4d9c6;
-  --ring: #2f7f86;
+/* Palette de l'administration (écran interne, hors site public) : conservée en clair, séparée du site. */
+@theme {
+  --color-ink: #0b1f3f;
+  --color-ink-soft: #46546b;
+  --color-cyan: #12c4dc;
+  --color-ground: #eaf5f8;
+  --color-stone: #d3e8ee;
 }
+
+[data-admin] {
+  background: var(--color-ground);
+  color: var(--color-ink);
+  min-height: 100svh;
+  color-scheme: light;
+  --u-text: var(--color-ink);
+  --u-soft: var(--color-ink-soft);
+  --u-soft-on-veil: rgb(255 255 255 / 0.78);
+  --u-surface: var(--color-stone);
+  --u-veil: var(--color-ink);
+  --u-blur: 0px;
+  --u-panel-radius: 0;
+  --u-panel-border: transparent;
+  --u-btn: var(--color-cyan);
+  --u-btn-fg: var(--color-ink);
+  --u-btn-hover: #46d6e8;
+  --u-ghost-bg: var(--color-stone);
+  --u-ghost-fg: var(--color-ink);
+  --u-ghost-border: transparent;
+  --u-ghost-hover-bg: var(--color-ink);
+  --u-ghost-hover-fg: #fff;
+  --u-field-bg: #fff;
+  --u-field-fg: var(--color-ink);
+  --u-field-border: transparent;
+  --u-field-focus: var(--color-ink);
+  --u-placeholder: #55657d;
+  --u-error: #9c1c14;
+  --u-focus: var(--color-ink);
+  --u-focus-on-dark: var(--color-cyan);
+  --u-selection-bg: var(--color-cyan);
+  --u-selection-fg: var(--color-ink);
+}
+
 html { scroll-behavior: auto; }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
@@ -44,73 +127,92 @@ html.lenis, html.lenis body { height: auto; }
 @layer components {
   body {
     overflow-x: clip;
-    background: var(--color-ground);
-    color: var(--color-ink);
+    background: var(--background);
+    color: var(--foreground);
     font-family: var(--font-sans);
     font-optical-sizing: auto;
-    font-size: 1.125rem;
-    line-height: 1.55;
+    font-size: 1.0625rem;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
 
-  /* Cinq tailles : petit 15, texte 18, énoncé 24, titre, affichage. */
-  h1, h2, h3 { font-weight: 700; text-wrap: balance; }
-  h1 { font-size: clamp(2.6rem, 10.4vw, 9.5rem); line-height: 0.92; letter-spacing: -0.045em; }
-  @media (min-width: 1024px) { h1 { font-size: clamp(5rem, 11.4vw, 12rem); } }
-  h2 { font-size: clamp(2rem, 1rem + 3.6vw, 4.5rem); line-height: 1; letter-spacing: -0.038em; }
-  h3 { font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.02em; font-weight: 720; }
+  /* Titres en Fraunces (36 px sur téléphone, 56 px sur ordinateur pour les h2), texte en Inter 17 px. */
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 600; text-wrap: balance; }
+  h1 { font-size: clamp(2.5rem, 1rem + 6.4vw, 6rem); line-height: 1; letter-spacing: -0.03em; }
+  h2 { font-size: clamp(2.25rem, 1.2rem + 2.6vw, 3.5rem); line-height: 1.06; letter-spacing: -0.02em; }
+  h3 { font-size: 1.5rem; line-height: 1.2; letter-spacing: -0.01em; font-weight: 600; }
   p, li { max-width: 62ch; }
-  .lead { font-size: 1.5rem; line-height: 1.32; letter-spacing: -0.012em; max-width: 34ch; }
+  .lead { font-size: 1.375rem; line-height: 1.4; letter-spacing: -0.005em; max-width: 36ch; }
   .small { font-size: 0.9375rem; line-height: 1.45; }
-  .soft { color: var(--color-ink-soft); }
+  .soft { color: var(--u-soft); }
 
-  :focus-visible { outline: 3px solid var(--color-ink); outline-offset: 3px; border-radius: 4px; }
-  .on-dark :focus-visible { outline-color: var(--color-cyan); }
-  ::selection { background: var(--color-cyan); color: var(--color-ink); }
+  :focus-visible { outline: 3px solid var(--u-focus); outline-offset: 3px; border-radius: 4px; }
+  .on-dark :focus-visible { outline-color: var(--u-focus-on-dark); }
+  ::selection { background: var(--u-selection-bg); color: var(--u-selection-fg); }
 
   /* Un seul cadre : deux marges extérieures égales, une grille de 12 colonnes. */
   .container-x { width: 100%; padding-inline: clamp(1.25rem, 2.4vw, 2rem); margin-inline: auto; }
   .grid12 { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(0.75rem, 1.6vw, 1.5rem); }
   .section { padding-block: clamp(4rem, 8vw, 7.5rem); }
 
-  /* Champs de couleur par chapitre : pas de lignes, des pas de tonalité. */
-  .field-stone { background: var(--color-stone); }
-  .field-ink { background: var(--color-ink); color: #fff; }
-  .field-ink .soft { color: rgb(255 255 255 / 0.78); }
+  /* Verre : fond translucide, flou, bordure fine. Le texte courant se pose dessus, jamais directement sur la lueur. */
+  .glass {
+    background: var(--card);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+    backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+    border: 1px solid var(--border);
+  }
 
-  /* Boutons : à plat, pilule, cible tactile d'au moins 44 px */
+  /* Chapitres : bande de verre ou bande sombre translucide (la lueur reste visible, le texte reste lisible). */
+  .field-stone {
+    background: var(--u-surface);
+    -webkit-backdrop-filter: blur(var(--u-blur)) saturate(1.2);
+    backdrop-filter: blur(var(--u-blur)) saturate(1.2);
+  }
+  .field-ink {
+    background: var(--u-veil);
+    color: var(--foreground);
+    -webkit-backdrop-filter: blur(var(--u-blur));
+    backdrop-filter: blur(var(--u-blur));
+  }
+  [data-admin] .field-ink { color: #fff; }
+  .field-ink .soft { color: var(--u-soft-on-veil); }
+
+  /* Boutons : pilule, cible tactile d'au moins 44 px. Principal = --primary ; secondaire = contour clair. */
   .btn {
     display: inline-flex; align-items: center; justify-content: center;
     min-height: 3rem; padding: 0.7rem 1.7rem; border-radius: 999px;
     font-weight: 650; line-height: 1.2; text-align: center; cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
   }
   .btn:hover { transform: translate3d(0, -2px, 0); }
   .btn:active { transform: translate3d(0, 1px, 0); }
-  .btn-primary { background: var(--color-cyan); color: var(--color-ink); }
-  .btn-primary:hover { background: #46d6e8; }
-  .btn-cyan { background: var(--color-cyan); color: var(--color-ink); }
-  .btn-cyan:hover { background: #46d6e8; }
-  .btn-ghost { background: var(--color-stone); color: var(--color-ink); }
-  .btn-ghost:hover { background: var(--color-ink); color: #fff; }
-  .field-ink .btn-ghost { background: rgb(255 255 255 / 0.12); color: #fff; }
-  .field-ink .btn-ghost:hover { background: #fff; color: var(--color-ink); }
+  .btn-primary, .btn-cyan { background: var(--u-btn); color: var(--u-btn-fg); }
+  .btn-primary:hover, .btn-cyan:hover { background: var(--u-btn-hover); }
+  .btn-ghost { background: var(--u-ghost-bg); color: var(--u-ghost-fg); border: 2px solid var(--u-ghost-border); }
+  .btn-ghost:hover { background: var(--u-ghost-hover-bg); color: var(--u-ghost-hover-fg); }
   .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
 
-  /* Surface = un pas de tonalité, jamais un filet */
-  .panel { background: var(--color-stone); border-radius: 0; }
+  /* Surface en verre */
+  .panel {
+    background: var(--u-surface);
+    border: 1px solid var(--u-panel-border);
+    border-radius: var(--u-panel-radius);
+    -webkit-backdrop-filter: blur(var(--u-blur)) saturate(1.2);
+    backdrop-filter: blur(var(--u-blur)) saturate(1.2);
+  }
 
   .champ {
     width: 100%; min-height: 3rem; padding: 0.7rem 1rem;
-    background: #fff; border: 2px solid transparent; border-radius: 12px;
-    color: var(--color-ink); font: inherit;
+    background: var(--u-field-bg); border: 2px solid var(--u-field-border); border-radius: 12px;
+    color: var(--u-field-fg); font: inherit;
   }
-  .field-stone .champ, .panel .champ { background: #fff; }
-  .champ:focus-visible { outline: none; border-color: var(--color-ink); }
-  .champ[aria-invalid="true"] { border-color: #b3261e; }
-  .champ::placeholder { color: #55657d; }
-  .erreur { color: #9c1c14; font-size: 0.9375rem; margin-top: 0.4rem; }
+  .field-stone .champ, .panel .champ { background: var(--u-field-bg); }
+  .champ:focus-visible { outline: none; border-color: var(--u-field-focus); }
+  .champ[aria-invalid="true"] { border-color: var(--u-error); }
+  .champ::placeholder { color: var(--u-placeholder); }
+  .erreur { color: var(--u-error); font-size: 0.9375rem; margin-top: 0.4rem; }
 
   /* Liens en gros textes */
   .big-link { display: block; transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); }
@@ -118,7 +220,7 @@ html.lenis, html.lenis body { height: auto; }
 
   html[data-cookies="set"] .cookie-bar { display: none; }
 
-  .skip-link { position: absolute; left: 1rem; top: -4rem; z-index: 100; background: var(--color-ink); color: #fff; padding: 0.75rem 1.25rem; border-radius: 999px; }
+  .skip-link { position: absolute; left: 1rem; top: -4rem; z-index: 100; background: var(--primary); color: var(--primary-foreground); padding: 0.75rem 1.25rem; border-radius: 999px; }
   .skip-link:focus { top: 1rem; }
 
   /* Entrées : le contenu reste visible sans script ; le script arme seulement ce qui est sous le pli. */

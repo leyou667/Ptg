@@ -1,18 +1,14 @@
 import type { Profile } from "@/content/fr";
 import { Reveal } from "../Reveal";
-import { fraunces, inter } from "./fonts";
 import { PricingSection } from "./PricingSection";
 
-/** Section « Trois formules » : thème « Atelier clair », Fraunces pour les titres et Inter pour le texte. */
+/** Section « Trois formules » : cartes en verre sur le fond animé. */
 export function FormulaSection({ title, text, defaultProfile }: { title: string; text?: string; defaultProfile: Profile }) {
   return (
-    <section
-      data-chapter="light"
-      className={`${fraunces.variable} ${inter.variable} section bg-background font-[family-name:var(--font-inter)] text-[17px] text-foreground`}
-    >
+    <section className="section text-[17px] text-foreground">
       <div className="container-x">
         <Reveal>
-          <h2 className="max-w-[20ch] font-[family-name:var(--font-fraunces)] text-[36px] font-semibold leading-[1.08] tracking-[-0.01em] md:text-[56px]">
+          <h2 className="max-w-[20ch]">
             {title}
           </h2>
         </Reveal>

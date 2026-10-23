@@ -6,7 +6,7 @@ export function Faq({ items, onField = "stone" }: { items: { q: string; a: strin
     <div className="grid gap-3">
       {items.map((i, n) => (
         <Reveal key={i.q} delay={n * 70}>
-          <details className={`group transition-colors duration-300 ${onField === "stone" ? "open:bg-ground" : "open:bg-stone"}`}>
+          <details className={`group transition-colors duration-300 open:bg-card rounded-2xl`}>
             <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-6 px-5 py-4 text-[1.125rem] font-medium leading-snug md:text-[1.375rem] tracking-tight md:px-6 [&::-webkit-details-marker]:hidden">
               {i.q}
               <span aria-hidden className="relative h-5 w-5 shrink-0">

@@ -16,7 +16,7 @@ function ToggleGroup({
   ...props
 }: React.ComponentProps<typeof ToggleGroupPrimitive.Root> & VariantProps<typeof toggleVariants>) {
   return (
-    <ToggleGroupPrimitive.Root data-slot="toggle-group" className={cn("inline-flex w-fit items-center gap-1 rounded-full bg-muted p-1", className)} {...props}>
+    <ToggleGroupPrimitive.Root data-slot="toggle-group" className={cn("inline-flex w-fit items-center gap-1 rounded-full border border-border bg-card p-1 backdrop-blur-xl", className)} {...props}>
       <ToggleGroupContext.Provider value={{ variant, size }}>{children}</ToggleGroupContext.Provider>
     </ToggleGroupPrimitive.Root>
   );

@@ -10,7 +10,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { buildPlans, type PricingPlan } from "./plans";
 
-const heading = "font-[family-name:var(--font-fraunces)] font-semibold";
+const heading = "font-display font-semibold";
 
 function Items({ items, empty }: { items: string[]; empty?: string }) {
   if (!items.length) return <span className="text-muted-foreground">{empty}</span>;
@@ -33,7 +33,7 @@ function PlanCard({ plan, profile }: { plan: PricingPlan; profile: Profile }) {
     <Card
       aria-label={`Formule ${plan.name}`}
       className={cn(
-        "relative transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_2px_4px_rgb(20_35_58/0.05),0_18px_36px_-14px_rgb(20_35_58/0.2)] motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+        "relative transition-all duration-300 hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0",
         rec ? "order-first border-primary ring-2 ring-primary md:order-none md:z-10 md:scale-[1.05]" : "",
       )}
     >
@@ -82,14 +82,14 @@ function Comparison({ plans }: { plans: PricingPlan[] }) {
     { key: "options", label: pricingUi.rows.options, cell: (p) => <Items items={p.options} empty={pricingUi.noOption} /> },
   ];
   return (
-    <div className="mt-20 hidden overflow-hidden rounded-3xl border border-border bg-card md:block">
+    <div className="mt-20 hidden overflow-hidden rounded-3xl border border-border bg-card backdrop-blur-xl md:block">
       <table className="w-full table-fixed border-collapse text-left text-[17px]">
         <caption className="sr-only">{pricingUi.tableCaption}</caption>
         <thead>
           <tr>
             <td className="w-[16%] p-5" />
             {plans.map((p) => (
-              <th key={p.id} scope="col" className={cn(heading, "bg-muted/40 p-5 text-[22px]", p.isRecommended && "text-primary")}>
+              <th key={p.id} scope="col" className={cn(heading, "bg-muted p-5 text-[22px]", p.isRecommended && "text-primary")}>
                 {p.name}
               </th>
             ))}

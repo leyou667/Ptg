@@ -15,11 +15,11 @@ export function Steps({ steps }: { steps: Step[] }) {
               {i === 0 ? (
                 <h2 className="max-w-[18ch]">{s.t}</h2>
               ) : (
-                <p className={`font-semibold tracking-tight ${i === 3 ? "text-cyan" : ""}`} style={{ fontSize: "clamp(2rem, 1rem + 3.6vw, 4.5rem)", lineHeight: 1, letterSpacing: "-0.038em" }}>
+                <p className={`font-semibold tracking-tight ${i === 3 ? "text-primary" : ""}`} style={{ fontSize: "clamp(2rem, 1rem + 3.6vw, 4.5rem)", lineHeight: 1, letterSpacing: "-0.038em" }}>
                   {s.t}
                 </p>
               )}
-              <p className="mt-4 max-w-[34ch] text-[1.125rem] text-white/85">{s.d}</p>
+              <p className="mt-4 max-w-[34ch] text-[1.125rem] text-foreground/85">{s.d}</p>
             </Reveal>
           ))}
           <Reveal delay={200} className="col-span-12 row-start-3 hidden lg:col-span-4 lg:col-start-1 lg:row-span-2 lg:row-start-3 lg:block lg:self-end">

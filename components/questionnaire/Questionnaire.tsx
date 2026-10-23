@@ -265,7 +265,7 @@ export function Questionnaire({ profile, initialFormula }: { profile: Profile; i
               {steps.map((s, i) => (
                 <li key={s.id}>
                   {i < stepIdx ? (
-                    <button type="button" className="min-h-11 font-semibold underline decoration-cyan decoration-2 underline-offset-4" onClick={() => setStepIdx(i)}>
+                    <button type="button" className="min-h-11 font-semibold underline decoration-primary decoration-2 underline-offset-4" onClick={() => setStepIdx(i)}>
                       {s.title}
                     </button>
                   ) : (
@@ -276,8 +276,8 @@ export function Questionnaire({ profile, initialFormula }: { profile: Profile; i
                 </li>
               ))}
             </ol>
-            <div className="h-1.5 bg-stone" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress)} aria-label="Avancement">
-              <div className="h-full bg-ink transition-[width] duration-300" style={{ width: `${Math.max(6, progress)}%` }} />
+            <div className="h-1.5 bg-card" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress)} aria-label="Avancement">
+              <div className="h-full bg-primary transition-[width] duration-300" style={{ width: `${Math.max(6, progress)}%` }} />
             </div>
           </nav>
 
@@ -323,7 +323,7 @@ export function Questionnaire({ profile, initialFormula }: { profile: Profile; i
               <div>
                 <p className="lead">{flow.formulaHelp}</p>
                 <div className="mt-10 md:py-6">
-                  <FormulaCards items={formulas[profile]} profile={profile} selected={values.formula === "undecided" ? null : (values.formula as FormulaId)} onChoose={(id) => change("formula", id)} tone="ground" />
+                  <FormulaCards items={formulas[profile]} profile={profile} selected={values.formula === "undecided" ? null : (values.formula as FormulaId)} onChoose={(id) => change("formula", id)} />
                 </div>
                 <div className="mt-12 flex flex-wrap items-center gap-3">
                   <button type="button" aria-pressed={values.formula === "undecided"} className={`btn ${values.formula === "undecided" ? "btn-primary" : "btn-ghost"}`} onClick={() => change("formula", "undecided")}>
@@ -371,7 +371,7 @@ export function Questionnaire({ profile, initialFormula }: { profile: Profile; i
                       onChange={(e) => change("consent", e.target.checked)}
                       aria-invalid={errs.consent ? true : undefined}
                       aria-describedby={errs.consent ? "err-consent" : undefined}
-                      className="mt-0.5 h-6 w-6 shrink-0 accent-[#0b1f3f]"
+                      className="mt-0.5 h-6 w-6 shrink-0 accent-primary"
                     />
                     <span>
                       {flow.consent}{" "}
@@ -417,10 +417,10 @@ export function Questionnaire({ profile, initialFormula }: { profile: Profile; i
           <div className="panel p-6">
             <h3>Une question ?</h3>
             <p className="soft mt-2">Parlez à quelqu&apos;un plutôt que de remplir le formulaire.</p>
-            <a href={site.phoneHref} className="mt-4 inline-flex min-h-11 items-center font-semibold underline decoration-cyan decoration-2 underline-offset-4">
+            <a href={site.phoneHref} className="mt-4 inline-flex min-h-11 items-center font-semibold underline decoration-primary decoration-2 underline-offset-4">
               {site.phoneDisplay}
             </a>
-            <a href={whatsappLink(waText)} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex min-h-11 items-center font-semibold underline decoration-cyan decoration-2 underline-offset-4">
+            <a href={whatsappLink(waText)} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex min-h-11 items-center font-semibold underline decoration-primary decoration-2 underline-offset-4">
               {site.whatsappLabel}
             </a>
           </div>

@@ -44,7 +44,8 @@ export function Intro() {
     const goStatic = () => root.classList.add("intro-static");
 
     const conn = (navigator as Navigator & { connection?: Connection }).connection;
-    const slow = conn?.saveData || conn?.effectiveType === "2g" || conn?.effectiveType === "slow-2g" || conn?.effectiveType === "3g";
+    // « 3g » n'est pas retenu : Chrome de bureau l'annonce dès que la latence est élevée (Wi-Fi chargé, VPN) alors que les 5,6 Mo d'images passent sans problème.
+    const slow = conn?.saveData || conn?.effectiveType === "2g" || conn?.effectiveType === "slow-2g";
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || slow) return goStatic();
 
     const ctx = cv.getContext("2d", { alpha: false });
@@ -269,15 +270,15 @@ export function Intro() {
 
   return (
     <section ref={wrap} aria-label="Introduction" className="intro relative -mt-16">
-      <div ref={stage} className="intro-stage sticky top-0 h-svh w-full overflow-hidden bg-ink">
+      <div ref={stage} className="intro-stage sticky top-0 h-svh w-full overflow-hidden bg-background">
         <canvas ref={canvas} className="absolute inset-0 h-full w-full" role="img" aria-label={intro.posterAlt} />
         {/* Voile sous le texte posé sur l'image */}
-        <div aria-hidden className="absolute inset-0 bg-ink/25" />
+        <div aria-hidden className="absolute inset-0 bg-background/25" />
         {/* taste-skill-ignore : voile sous le texte posé sur l'image, seule exception admise aux dégradés */}
-        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/40 to-transparent" /> {/* taste-skill-ignore */}
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" /> {/* taste-skill-ignore */}
 
         <div ref={starEl} aria-hidden className="absolute left-[48%] top-[60%] h-16 w-16 opacity-0 md:left-[56%] md:top-[64%] md:h-24 md:w-24">
-          <Star className="scintille h-full w-full text-cyan" />
+          <Star className="scintille h-full w-full text-primary" />
         </div>
 
         <div className="container-x intro-copy absolute inset-x-0 bottom-0 pb-24 md:pb-16">
@@ -289,7 +290,7 @@ export function Intro() {
                 ref={(el) => {
                   lines.current[i] = el;
                 }}
-                className="intro-line absolute inset-x-0 bottom-0 max-w-none text-[1.75rem] font-semibold leading-[1.05] tracking-tight text-white sm:max-w-[22ch] sm:text-5xl md:max-w-[26ch] md:text-6xl"
+                className="intro-line absolute inset-x-0 bottom-0 max-w-none text-[1.75rem] font-semibold leading-[1.05] tracking-tight text-foreground sm:max-w-[22ch] sm:text-5xl md:max-w-[26ch] md:text-6xl"
                 style={i === 0 ? undefined : { opacity: 0, visibility: "hidden" }}
               >
                 {i === 0 ? (
@@ -305,7 +306,7 @@ export function Intro() {
           </ol>
           <div className="relative mt-5 min-h-[8.5rem]">
             <div ref={(el) => { subs.current[0] = el; }} className="intro-sub absolute inset-x-0 top-0">
-              <p className="max-w-[30ch] text-xl leading-snug text-white/90">{home.statement}</p>
+              <p className="max-w-[30ch] text-xl leading-snug text-foreground/90">{home.statement}</p>
               <button type="button" onClick={skip} className="btn btn-cyan mt-5 text-base">
                 {intro.cta}
               </button>
@@ -320,17 +321,17 @@ export function Intro() {
           className="intro-choices container-x absolute inset-x-0 bottom-0 pb-24"
           style={{ opacity: 0, visibility: "hidden" }}
         >
-          <p className="text-[1.125rem] text-white/85 md:text-xl">{choice.tagline}</p>
-          <h2 className="mt-2 text-white" style={{ fontSize: "clamp(1.75rem, 1rem + 2.6vw, 3.5rem)" }}>
+          <p className="text-[1.125rem] text-foreground/85 md:text-xl">{choice.tagline}</p>
+          <h2 className="mt-2 text-foreground" style={{ fontSize: "clamp(1.75rem, 1rem + 2.6vw, 3.5rem)" }}>
             {choice.title}
           </h2>
           <ChoiceTiles className="mt-5 md:mt-7" />
         </div>
 
-        <div ref={hint} className="intro-hint absolute left-5 top-[5.5rem] text-sm font-medium text-white/90 md:left-auto md:right-16" aria-hidden>
+        <div ref={hint} className="intro-hint absolute left-5 top-[5.5rem] text-sm font-medium text-foreground/90 md:left-auto md:right-16" aria-hidden>
           {intro.scrollHint}
         </div>
-        <button ref={skipEl} type="button" onClick={skip} className="intro-skip btn absolute right-10 top-[5.5rem] min-h-11 bg-ink/60 px-5 py-2 text-[0.9375rem] text-white hover:bg-white hover:text-ink md:bottom-8 md:right-16 md:top-auto">
+        <button ref={skipEl} type="button" onClick={skip} className="intro-skip btn absolute right-10 top-[5.5rem] min-h-11 bg-background/60 px-5 py-2 text-[0.9375rem] text-foreground hover:bg-foreground hover:text-background md:bottom-8 md:right-16 md:top-auto">
           {intro.skip}
         </button>
       </div>

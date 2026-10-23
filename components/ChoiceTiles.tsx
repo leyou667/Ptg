@@ -6,7 +6,7 @@ import { choice } from "@/content/questionnaire";
  * il n'y a aucune page intermédiaire entre le choix et la première question.
  */
 export function ChoiceTiles({ onDark = false, className = "", animate = false }: { onDark?: boolean; className?: string; animate?: boolean }) {
-  const tile = "choice group flex min-h-[7.5rem] flex-col justify-between gap-6 bg-ground p-6 text-ink transition-colors duration-200 hover:bg-cyan focus-visible:bg-cyan md:min-h-[13rem] md:p-9";
+  const tile = "choice group flex min-h-[7.5rem] flex-col justify-between gap-6 glass rounded-3xl p-6 text-foreground transition-colors duration-200 hover:bg-primary hover:text-primary-foreground focus-visible:bg-primary focus-visible:text-primary-foreground md:min-h-[13rem] md:p-9";
   return (
     <div className={`grid gap-3 md:grid-cols-2 md:gap-5 ${className}`} data-ondark={onDark || undefined}>
       <Link href="/devis/particulier" aria-label={choice.particulier.aria} className={`${tile} ${animate ? "rise" : ""}`} style={animate ? ({ "--d": "180ms" } as React.CSSProperties) : undefined}>

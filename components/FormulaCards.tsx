@@ -12,8 +12,6 @@ type Props = {
   selected?: FormulaId | null;
   /** Mode parcours : bouton qui appelle onChoose. Sinon lien vers /devis. */
   onChoose?: (id: FormulaId) => void;
-  /** Sur fond stone, les formules sobres passent en ground pour garder un pas de tonalité. */
-  tone?: "ground" | "stone";
 };
 
 /**
@@ -21,8 +19,7 @@ type Props = {
  * qu'on fait glisser, la formule du milieu s'agrandit, ses voisines dépassent des deux côtés. Chaque formule porte
  * une ombre (elle flotte au-dessus du fond).
  */
-export function FormulaCards({ items, profile, selected, onChoose, tone = "stone" }: Props) {
-  const plain = tone === "stone" ? "bg-ground" : "bg-stone";
+export function FormulaCards({ items, profile, selected, onChoose }: Props) {
   const rail = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -73,30 +70,30 @@ export function FormulaCards({ items, profile, selected, onChoose, tone = "stone
             data-card
             aria-label={`Formule ${f.name}`}
             className={`flex w-[78%] shrink-0 snap-center flex-col rounded-[28px] p-6 shadow-flotte transition-[box-shadow] max-md:[opacity:var(--o,1)] max-md:[transform:scale(var(--s,1))] md:w-auto md:p-9 ${
-              rec ? "on-dark bg-ink text-white md:-my-6 md:py-14" : plain
-            } ${isSel ? "outline outline-4 outline-offset-[-4px] outline-cyan" : ""}`}
+              rec ? "glass ring-2 ring-primary md:-my-6 md:py-14" : "glass"
+            } ${isSel ? "outline outline-4 outline-offset-[-4px] outline-primary" : ""}`}
           >
             <header className="pb-6">
               <h3 className={`flex items-center gap-3 ${rec ? "text-[2.25rem]" : "text-[1.75rem]"}`}>
                 {f.name}
-                {rec && <Star className="h-5 w-5 text-cyan" />}
+                {rec && <Star className="h-5 w-5 text-primary" />}
               </h3>
-              {rec && <p className="mt-2 font-semibold text-cyan">{quote.formulas.recommended}</p>}
-              <p className={`mt-3 ${rec ? "text-white/85" : "soft"}`}>{f.tagline}</p>
+              {rec && <p className="mt-2 font-semibold text-primary">{quote.formulas.recommended}</p>}
+              <p className={`mt-3 ${rec ? "text-foreground/85" : "soft"}`}>{f.tagline}</p>
             </header>
             {f.rows.map((r) => (
               <div key={r.label} className="py-4">
-                <p className={`small font-semibold ${rec ? "text-cyan" : "soft"}`}>{r.label}</p>
+                <p className={`small font-semibold ${rec ? "text-primary" : "soft"}`}>{r.label}</p>
                 <p className="mt-1">{r.value}</p>
               </div>
             ))}
             <div className="mt-auto pt-6">
               {onChoose ? (
-                <button type="button" className={`btn w-full ${rec ? "btn-cyan" : "btn-primary"}`} aria-pressed={isSel} onClick={() => onChoose(f.id)}>
+                <button type="button" className={`btn w-full ${rec ? "btn-primary" : "btn-ghost"}`} aria-pressed={isSel} onClick={() => onChoose(f.id)}>
                   {isSel ? quote.formulas.chosen : quote.formulas.choose}
                 </button>
               ) : (
-                <Link href={`/devis/${profile === "societe" ? "societe" : "particulier"}?formule=${f.id}`} className={`btn w-full ${rec ? "btn-cyan" : "btn-primary"}`}>
+                <Link href={`/devis/${profile === "societe" ? "societe" : "particulier"}?formule=${f.id}`} className={`btn w-full ${rec ? "btn-primary" : "btn-ghost"}`}>
                   {quote.formulas.choose}
                 </Link>
               )}

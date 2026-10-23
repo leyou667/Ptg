@@ -46,7 +46,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
             </Reveal>
           </div>
           <div className="mt-16 md:py-6">
-            <FormulaCards items={formulas.societe} profile="societe" tone="ground" />
+            <FormulaCards items={formulas.societe} profile="societe" />
           </div>
         </div>
       </section>

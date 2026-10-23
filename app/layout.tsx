@@ -1,15 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Sans } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
+import { AnimatedBackground } from "@/components/ui/animated-background";
 import "./globals.css";
 import { site } from "@/content/fr";
 import { siteUrl } from "@/lib/config";
 
-const sans = Instrument_Sans({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-sans-face",
-  display: "swap",
-  axes: ["wdth"],
-});
+const display = Fraunces({ subsets: ["latin", "latin-ext"], variable: "--font-fraunces", display: "swap" });
+const sans = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -28,12 +25,15 @@ export const metadata: Metadata = {
   alternates: { canonical: "./" },
 };
 
-export const viewport: Viewport = { themeColor: "#eaf5f8", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#02060f", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr-BE" className={sans.variable} suppressHydrationWarning>
-      <body>{children}</body>
+    <html lang="fr-BE" className={`${display.variable} ${sans.variable}`} suppressHydrationWarning>
+      <body>
+        <AnimatedBackground />
+        {children}
+      </body>
     </html>
   );
 }

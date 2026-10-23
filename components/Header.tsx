@@ -1,46 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { nav } from "@/content/fr";
 import { Logo } from "./Logo";
 
-/** Barre simple : le nom, quelques liens, une action. Elle prend l'encre du chapitre qui passe dessous. */
+/** Barre simple : le nom, quelques liens, une action. Un seul style sur toute la page : verre sombre. */
 export function Header() {
   const [open, setOpen] = useState(false);
-  const [dark, setDark] = useState(true);
-
-  useEffect(() => {
-    let raf = 0;
-    const read = () => {
-      raf = 0;
-      const hit = document
-        .elementsFromPoint(window.innerWidth / 2, 40)
-        .find((e) => !e.closest("header") && e.closest("[data-chapter]"));
-      const tone = hit?.closest<HTMLElement>("[data-chapter]")?.dataset.chapter;
-      setDark(tone === "dark");
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(read);
-    };
-    read();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
-
-  const bar = dark || open ? (open && !dark ? "bg-ground text-ink" : "bg-ink text-white") : "bg-ground text-ink";
-  const tone = dark && !open ? "dark" : "light";
 
   return (
-    <header className={`sticky top-0 z-40 transition-colors duration-300 ${bar} ${tone === "dark" ? "on-dark" : ""}`}>
+    <header className="glass sticky top-0 z-40 rounded-none border-x-0 border-t-0 bg-background/85 text-foreground">
       <div className="container-x flex h-16 items-center justify-between gap-4">
         <Link href="/" aria-label="CheyClean, accueil" className="shrink-0" onClick={() => setOpen(false)}>
-          <Logo dark={tone === "dark"} className="h-9 w-auto" />
+          <Logo dark className="h-9 w-auto" />
         </Link>
         <nav aria-label="Navigation principale" className="hidden items-center gap-2 md:flex">
           {nav.map((n) => (
@@ -54,7 +27,7 @@ export function Header() {
         </nav>
         <button
           type="button"
-          className={`flex h-11 w-11 items-center justify-center rounded-full md:hidden ${tone === "dark" ? "bg-white/15" : "bg-stone"}`}
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-card md:hidden"
           aria-expanded={open}
           aria-controls="menu-mobile"
           aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}

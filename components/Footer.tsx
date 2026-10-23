@@ -9,7 +9,7 @@ export function Footer() {
     <footer data-chapter="light" className="field-stone pb-28 pt-16 md:pb-10 md:pt-20">
       <div className="container-x">
         <Reveal>
-          <Logo className="h-auto w-[min(100%,20rem)]" />
+          <Logo dark className="h-auto w-[min(100%,20rem)]" />
         </Reveal>
 
         <div className="grid12 mt-16 gap-y-12">
