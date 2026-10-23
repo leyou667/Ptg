@@ -73,6 +73,8 @@
   --color-border-strong: var(--border-strong);
   --color-ring: var(--ring);
   --color-destructive: var(--destructive);
+  --color-glow-deep: var(--glow-deep);
+  --color-glow-mid: var(--glow-mid);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
   --shadow-flotte: 0 22px 44px -16px rgb(0 0 0 / 0.6);
@@ -240,6 +242,59 @@ html.lenis, html.lenis body { height: auto; }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
     [data-reveal="hidden"] { opacity: 1; transform: none; }
+  }
+
+  /* ---------- Illustrations animées (Comment ça marche) : transform et opacity seulement ---------- */
+  .ill { width: 11rem; height: 11rem; max-width: 100%; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  /* Seuls les éléments animés pivotent autour de leur centre (les attributs transform de placement restent intacts). */
+  .ill :is(.float, .float2, .twinkle, .blink, .a-drop, .a-lift, .a-pop, .a-burst, .a-flap-closed, .a-flap-open, .a-rise, .a-slam, .a-joy) { transform-box: fill-box; transform-origin: center; }
+  .ill[data-ill="armed"] { opacity: 0; transform: scale(0); }
+  .ill[data-ill="on"] { animation: ill-pop 600ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+  .ill-hop.is-hop { animation: ill-hop 520ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .ill[data-vis="0"] *, .ill[data-vis="0"] { animation-play-state: paused !important; }
+
+  /* Boucle de vie : lente, jamais agressive. */
+  .ill[data-ill="on"] .float { animation: ill-float 5.5s ease-in-out infinite; }
+  .ill[data-ill="on"] .float2 { animation: ill-float 3.2s ease-in-out 2.8s infinite; }
+  .ill[data-ill="on"] .twinkle { animation: ill-twinkle 2.8s ease-in-out infinite; }
+  .ill[data-ill="on"] .blink { animation: ill-blink 5.5s ease-in-out infinite; }
+
+  /* Séquences : l'état de base est l'état final (version statique complète). */
+  .ill .a-draw { stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .ill[data-ill="on"] .a-draw { animation: ill-draw 700ms ease-out var(--d, 0s) both; }
+  .ill[data-ill="on"] .a-drop { animation: ill-drop 950ms ease-in var(--d, 0s) both; }
+  .ill .a-lift { transform: translateY(-14px); }
+  .ill[data-ill="on"] .a-lift { animation: ill-lift 650ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0s) both; }
+  .ill[data-ill="on"] .a-pop { animation: ill-pop2 520ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0s) both; }
+  .ill .a-burst { transform: translate(var(--tx, 0), var(--ty, 0)); }
+  .ill[data-ill="on"] .a-burst { animation: ill-burst 900ms ease-out var(--d, 0s) both; }
+  .ill .a-flap-closed { opacity: 0; transform: scaleY(0); transform-origin: 50% 0%; }
+  .ill[data-ill="on"] .a-flap-closed { animation: ill-flap-close 450ms ease-in var(--d, 0.2s) both reverse; }
+  .ill .a-flap-open { transform-origin: 50% 100%; }
+  .ill[data-ill="on"] .a-flap-open { animation: ill-flap-open 500ms cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s both; }
+  .ill[data-ill="on"] .a-rise { animation: ill-rise 800ms ease-out var(--d, 0s) both; }
+  .ill[data-ill="on"] .a-slam { animation: ill-slam 450ms cubic-bezier(0.5, 0, 0.3, 1.4) var(--d, 0s) both; }
+  .ill[data-ill="on"] .a-joy { animation: ill-joy 1000ms ease-out var(--d, 0s) both; }
+
+  @keyframes ill-pop { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes ill-hop { 0% { transform: none; } 35% { transform: translateY(-12px) scale(1.05, 0.97); } 70% { transform: translateY(0) scale(0.97, 1.03); } 100% { transform: none; } }
+  @keyframes ill-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+  @keyframes ill-twinkle { 0%, 100% { opacity: 0.35; transform: scale(0.7) rotate(0deg); } 50% { opacity: 1; transform: scale(1.1) rotate(12deg); } }
+  @keyframes ill-blink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+  @keyframes ill-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes ill-drop { 0% { transform: translateY(-80px); opacity: 0; } 45% { transform: translateY(0); opacity: 1; } 62% { transform: translateY(-16px); } 78% { transform: translateY(0); } 90% { transform: translateY(-5px); } 100% { transform: translateY(0); } }
+  @keyframes ill-lift { from { transform: translateY(0); } to { transform: translateY(-14px); } }
+  @keyframes ill-pop2 { 0% { transform: scale(0); } 65% { transform: scale(1.2); } 100% { transform: scale(1); } }
+  @keyframes ill-burst { 0% { transform: translate(0, 0) scale(0); opacity: 0; } 35% { opacity: 1; } 100% { transform: translate(var(--tx, 0), var(--ty, 0)) scale(1); opacity: 1; } }
+  @keyframes ill-flap-close { from { opacity: 0; transform: scaleY(0); } to { opacity: 1; transform: scaleY(1); } }
+  @keyframes ill-flap-open { from { opacity: 0; transform: scaleY(0); } to { opacity: 1; transform: scaleY(1); } }
+  @keyframes ill-rise { 0% { transform: translateY(62px); } 55% { transform: translateY(-14px); } 75% { transform: translateY(3px); } 100% { transform: translateY(0); } }
+  @keyframes ill-slam { 0% { transform: scale(2.6) rotate(-16deg); opacity: 0; } 60% { transform: scale(0.88) rotate(2deg); opacity: 1; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+  @keyframes ill-joy { 0%, 100% { transform: translateY(0) scale(1); } 22% { transform: translateY(-13px) scale(0.96, 1.05); } 42% { transform: translateY(0) scale(1.05, 0.94); } 62% { transform: translateY(-7px); } 80% { transform: translateY(0); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ill, .ill *, .ill-hop { animation: none !important; }
+    .ill[data-ill] { opacity: 1; transform: none; }
   }
 
 /* Intro : hauteur de défilement qui pilote la vidéo (≈ 1 écran par phrase) */

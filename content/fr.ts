@@ -230,6 +230,13 @@ export const home = {
     { t: "Nous vous envoyons un devis.", d: "Sur mesure, avec un prix fixé après échange avec vous." },
     { t: "Puis nous intervenons à jours fixes.", d: "Une équipe attitrée, aux horaires convenus, en toute discrétion." },
   ],
+  stepsCta: "Demander un devis",
+  stepIllustrations: [
+    "Illustration : une pièce arrondie avec ses mesures en largeur et en hauteur, et une épingle qui marque votre lieu.",
+    "Illustration : trois cartes de formules, celle du milieu se soulève et se coche, avec des étincelles.",
+    "Illustration : une enveloppe qui s'ouvre, un devis qui en sort et un tampon de validation.",
+    "Illustration : un calendrier dont les jours d'intervention se cochent, et un seau tout content.",
+  ],
   audiences: {
     title: "Un nettoyage pensé pour votre lieu",
     particuliers: {
