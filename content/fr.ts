@@ -43,6 +43,19 @@ export const intro = {
   posterAlt: "Intérieur d'une villa lumineuse avec sol en marbre, nettoyé par CheyClean",
 };
 
+/** Textes du sélecteur et des cartes de formules (aucun prix n'est jamais affiché). */
+export const pricingUi = {
+  profileLabel: "Choisir un profil",
+  profiles: { particulier: "Particuliers", societe: "Sociétés" } as Record<Profile, string>,
+  recommended: "Recommandée",
+  quoteOnly: "Sur devis",
+  quoteNote: "Prix fixé après échange avec vous",
+  rows: { included: "Inclus", frequency: "Fréquence", options: "Options" },
+  tableCaption: "Comparatif des formules",
+  noOption: "Aucune",
+  buttonAria: (name: string, profile: string) => `Choisir la formule ${name} pour les ${profile.toLowerCase()} et demander un devis`,
+};
+
 export const formulas: Record<Profile, Formula[]> = {
   particulier: [
     {

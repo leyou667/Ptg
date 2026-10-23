@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { audiencePages, formulas, type Profile } from "@/content/fr";
-import { FormulaCards } from "./FormulaCards";
+import { FormulaSection } from "./pricing/FormulaSection";
 import { Faq } from "./Faq";
 import { JsonLd } from "./JsonLd";
 import { PageHero } from "./PageHero";
@@ -68,16 +68,7 @@ export function AudiencePage({ profile }: { profile: Profile }) {
         </div>
       </section>
 
-      <section data-chapter="light" className="field-stone section">
-        <div className="container-x">
-          <Reveal>
-            <h2 className="max-w-[18ch]">Trois formules, un seul niveau d&apos;exigence</h2>
-          </Reveal>
-          <div className="mt-16 md:py-6">
-            <FormulaCards items={formulas[profile]} profile={profile} tone="ground" />
-          </div>
-        </div>
-      </section>
+      <FormulaSection title="Trois formules, un seul niveau d'exigence" defaultProfile={profile} />
 
       <section data-chapter="light" className="section">
         <div className="container-x">
