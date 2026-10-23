@@ -26,13 +26,6 @@ function Sparkle({ x, y, s = 1, fill = "fill-primary", delay = "0s", burst }: Sp
   );
 }
 
-const Eyes = ({ x1, x2, y, r = 4.5 }: { x1: number; x2: number; y: number; r?: number }) => (
-  <>
-    <circle cx={x1} cy={y} r={r} className="blink fill-glow-deep" />
-    <circle cx={x2} cy={y} r={r} className="blink fill-glow-deep" />
-  </>
-);
-const Smile = ({ d, w = 4.5 }: { d: string; w?: number }) => <path d={d} fill="none" strokeWidth={w} strokeLinecap="round" className="stroke-glow-deep" />;
 const Check = ({ d, w = 5, cls = "stroke-glow-deep" }: { d: string; w?: number; cls?: string }) => (
   <path d={d} fill="none" strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" className={cls} />
 );
@@ -57,8 +50,6 @@ export function SceneRoom() {
         <g transform="translate(100 128)">
           <g className="a-drop" style={{ "--d": "1.1s" } as CSSProperties}>
             <path d="M0 0 C-5 -10 -15 -17 -15 -29 a15 15 0 0 1 30 0 C15 -17 5 -10 0 0Z" className="fill-primary stroke-primary" strokeWidth="4" strokeLinejoin="round" />
-            <Eyes x1={-5.5} x2={5.5} y={-31} r={2.6} />
-            <Smile d="M-4.5 -24 Q0 -19.5 4.5 -24" w={2.6} />
           </g>
         </g>
       </g>
@@ -87,8 +78,6 @@ export function SceneCards() {
         {bars(134)}
         <g className="a-lift" style={{ "--d": "0.5s" } as CSSProperties}>
           <rect x="68" y="52" width="64" height="106" rx="20" className="fill-primary" />
-          <Eyes x1={87} x2={113} y={86} />
-          <Smile d="M88 100 Q100 112 112 100" />
           <rect x="82" y="124" width="36" height="9" rx="4.5" className="fill-foreground" opacity="0.85" />
           <rect x="88" y="140" width="24" height="8" rx="4" className="fill-foreground" opacity="0.55" />
           <g transform="translate(132 56)">
@@ -130,10 +119,6 @@ export function SceneQuote() {
           </g>
         </g>
         <path d="M26 104 L100 146 L174 104 V150 a18 18 0 0 1 -18 18 H44 a18 18 0 0 1 -18 -18Z" strokeWidth="6" strokeLinejoin="round" className="fill-primary stroke-primary" />
-        <g className="a-pop" style={{ "--d": "0.5s" } as CSSProperties}>
-          <Eyes x1={86} x2={114} y={148} r={4} />
-          <Smile d="M92 156 Q100 163 108 156" w={4} />
-        </g>
         <path d="M26 96 Q26 86 36 86 H164 Q174 86 174 96 L100 140Z" strokeWidth="6" strokeLinejoin="round" className="a-flap-closed fill-foreground stroke-foreground" />
       </g>
       <Sparkle x={170} y={46} s={0.9} />
@@ -174,8 +159,6 @@ export function SceneCalendar() {
             <path d="M-22 -26 H22 L17 20 a8 8 0 0 1 -8 7 H-9 a8 8 0 0 1 -8 -7Z" strokeWidth="6" strokeLinejoin="round" className="fill-primary stroke-primary" />
             <rect x="-28" y="-36" width="56" height="13" rx="6.5" className="fill-foreground" />
             <path d="M-21 -36 Q0 -66 21 -36" fill="none" strokeWidth="5" strokeLinecap="round" className="stroke-foreground" />
-            <Eyes x1={-8} x2={8} y={-6} r={3.6} />
-            <Smile d="M-6 4 Q0 10 6 4" w={3.6} />
           </g>
         </g>
       </g>
